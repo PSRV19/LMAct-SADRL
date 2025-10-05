@@ -1,0 +1,53 @@
++----+----+----+----+----+----+----+
+| 01 | ## | 02 | ## | 03 |    | 04 |
++----+----+----+----+----+----+----+
+| 05 | 06 | 07 |    |    | ## |    |
++----+----+----+----+----+----+----+
+|    | ## |    | ## | 08 |    |    |
++----+----+----+----+----+----+----+
+| ## | ## |    | ## |    | ## |    |
++----+----+----+----+----+----+----+
+| ## | 09 |    | 10 |    | 11 | ## |
++----+----+----+----+----+----+----+
+| ## |    | ## |    | ## |    | ## |
++----+----+----+----+----+----+----+
+| ## |    | ## | 12 |    |    | ## |
++----+----+----+----+----+----+----+
+
+Across:
+ 3: The Windy City, briefly
+ 5: What online shoppers may spend
+ 6: Word before cow or crop
+ 8: "Can-Can" author Burrows
+ 9: On-ramp sign
+12: AFL's partner
+Down:
+ 1: Simpsons' neighbor Flanders
+ 2: "All hope abandon ye..." writer
+ 3: Ballroom dance syllable
+ 3: Eng's twin
+ 4: Agenda entry
+ 7: Part of A.M.
+ 9: Dallas hoopster, informally
+10: DVR button label
+11: ___-friendly ("green")
+
+Solution:
+D1: NED (0, 0)
+D2: DANTE (0, 2)
+D3: CHA (0, 4)
+A3: CHI (0, 4)
+D3: CHANG (0, 4)
+D4: ITEM (0, 6)
+A5: ECASH (1, 0)
+A6: CASH (1, 1)
+D7: ANTE (1, 2)
+A8: ABE (2, 4)
+A9: MERGE (4, 1)
+D9: MAV (4, 1)
+D10: REC (4, 3)
+D11: ECO (4, 5)
+A12: CIO (6, 3)
+
+Grid:
+[['N', '-', 'D', '-', 'C', 'H', 'I'], ['E', 'C', 'A', 'S', 'H', '-', 'T'], ['D', '-', 'N', '-', 'A', 'B', 'E'], ['-', '-', 'T', '-', 'N', '-', 'M'], ['-', 'M', 'E', 'R', 'G', 'E', '-'], ['-', 'A', '-', 'E', '-', 'C', '-'], ['-', 'V', '-', 'C', 'I', 'O', '-']]

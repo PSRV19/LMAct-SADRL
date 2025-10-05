@@ -1,0 +1,26 @@
+2025-10-05 21:08:54,543 INFO    MainThread:61441 [wandb_setup.py:_flush():81] Current SDK version is 0.22.1
+2025-10-05 21:08:54,544 INFO    MainThread:61441 [wandb_setup.py:_flush():81] Configure stats pid to 61441
+2025-10-05 21:08:54,544 INFO    MainThread:61441 [wandb_setup.py:_flush():81] Loading settings from /Users/psrv19/.config/wandb/settings
+2025-10-05 21:08:54,544 INFO    MainThread:61441 [wandb_setup.py:_flush():81] Loading settings from /Users/psrv19/Documents/Leiden/Uni/S2/SADRL/lm_act/wandb/settings
+2025-10-05 21:08:54,544 INFO    MainThread:61441 [wandb_setup.py:_flush():81] Loading settings from environment variables
+2025-10-05 21:08:54,544 INFO    MainThread:61441 [wandb_init.py:setup_run_log_directory():705] Logging user logs to /Users/psrv19/Documents/Leiden/Uni/S2/SADRL/lm_act/wandb/run-20251005_210854-slbjvytv/logs/debug.log
+2025-10-05 21:08:54,544 INFO    MainThread:61441 [wandb_init.py:setup_run_log_directory():706] Logging internal logs to /Users/psrv19/Documents/Leiden/Uni/S2/SADRL/lm_act/wandb/run-20251005_210854-slbjvytv/logs/debug-internal.log
+2025-10-05 21:08:54,544 INFO    MainThread:61441 [wandb_init.py:init():832] calling init triggers
+2025-10-05 21:08:54,544 INFO    MainThread:61441 [wandb_init.py:init():837] wandb.init called with sweep_config: {}
+config: {'num_demonstrations': 4, 'num_evaluation_steps': 100, 'num_evaluation_episodes': 100, 'replay_episode': False, 'agent': {'name': 'api_agent', 'action_type': 'txt', 'model_name': 'google/gemini-2.5-flash-lite-preview-09-2025'}, 'environment': {'name': 'tic_tac_toe', 'observation_type': 'txt', 'action_type': 'txt', 'render_coordinates': False, 'seed': 0}, 'prompt': {'show_legal_actions': False, 'use_chain_of_thought': False, 'include_past_actions': True}, '_wandb': {}}
+2025-10-05 21:08:54,544 INFO    MainThread:61441 [wandb_init.py:init():880] starting backend
+2025-10-05 21:08:55,169 INFO    MainThread:61441 [wandb_init.py:init():883] sending inform_init request
+2025-10-05 21:08:55,185 INFO    MainThread:61441 [wandb_init.py:init():891] backend started and connected
+2025-10-05 21:08:55,186 INFO    MainThread:61441 [wandb_init.py:init():961] updated telemetry
+2025-10-05 21:08:55,201 INFO    MainThread:61441 [wandb_init.py:init():985] communicating run to backend with 90.0 second timeout
+2025-10-05 21:08:55,824 INFO    MainThread:61441 [wandb_init.py:init():1036] starting run threads in backend
+2025-10-05 21:08:55,860 INFO    MainThread:61441 [wandb_run.py:_console_start():2506] atexit reg
+2025-10-05 21:08:55,860 INFO    MainThread:61441 [wandb_run.py:_redirect():2354] redirect: wrap_raw
+2025-10-05 21:08:55,860 INFO    MainThread:61441 [wandb_run.py:_redirect():2423] Wrapping output streams.
+2025-10-05 21:08:55,860 INFO    MainThread:61441 [wandb_run.py:_redirect():2446] Redirects installed.
+2025-10-05 21:08:55,862 INFO    MainThread:61441 [wandb_init.py:init():1076] run started, returning control to user process
+2025-10-05 21:11:00,189 INFO    MainThread:61441 [wandb_run.py:_finish():2272] finishing run pranavsrv10-leiden-university/lm-act/slbjvytv
+2025-10-05 21:11:00,189 INFO    MainThread:61441 [wandb_run.py:_atexit_cleanup():2471] got exitcode: 0
+2025-10-05 21:11:00,190 INFO    MainThread:61441 [wandb_run.py:_restore():2453] restore
+2025-10-05 21:11:00,190 INFO    MainThread:61441 [wandb_run.py:_restore():2459] restore done
+2025-10-05 21:11:01,067 INFO    MainThread:61441 [wandb_run.py:_footer_sync_info():3869] logging synced files

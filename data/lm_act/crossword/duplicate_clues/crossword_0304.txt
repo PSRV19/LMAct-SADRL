@@ -1,0 +1,57 @@
++----+----+----+----+----+----+----+
+| ## | ## | ## | 01 |    |    | 02 |
++----+----+----+----+----+----+----+
+| 03 | 04 |    |    | ## | ## |    |
++----+----+----+----+----+----+----+
+| ## |    | ## | 05 |    | 06 |    |
++----+----+----+----+----+----+----+
+| 07 |    | 08 |    | ## |    | ## |
++----+----+----+----+----+----+----+
+|    | ## |    | ## | 09 |    | 10 |
++----+----+----+----+----+----+----+
+| 11 |    |    |    |    | ## |    |
++----+----+----+----+----+----+----+
+|    | ## |    | ## | 12 |    |    |
++----+----+----+----+----+----+----+
+
+Across:
+ 1: One of the north 40
+ 3: Tough time for Caesar
+ 5: Male deer
+ 7: Treaty
+ 9: Little dog's bark
+11: Solicit a bid
+11: Sought information
+12: Another blue hue
+Down:
+ 1: Aide for an exec (Abbr.)
+ 2: ER test
+ 4: "CSI" find, sometimes
+ 6: He "stung like a bee"
+ 7: Bake-sale grp.
+ 7: Grade school orgs.
+ 8: Soft drink choice
+ 9: Fabric measures (Abbr.)
+10: Tissue layer
+
+Solution:
+D1: ASST (0, 3)
+A1: ACRE (0, 3)
+D2: ECG (0, 6)
+A3: IDES (1, 0)
+D4: DNA (1, 1)
+A5: STAG (2, 3)
+D6: ALI (2, 5)
+A7: PACT (3, 0)
+D7: PTA (3, 0)
+D7: PTAS (3, 0)
+D8: COKE (3, 2)
+A9: YIP (4, 4)
+D9: YDS (4, 4)
+D10: PLY (4, 6)
+A11: ASK (5, 0)
+A11: ASKED (5, 0)
+A12: SKY (6, 4)
+
+Grid:
+[['-', '-', '-', 'A', 'C', 'R', 'E'], ['I', 'D', 'E', 'S', '-', '-', 'C'], ['-', 'N', '-', 'S', 'T', 'A', 'G'], ['P', 'A', 'C', 'T', '-', 'L', '-'], ['T', '-', 'O', '-', 'Y', 'I', 'P'], ['A', 'S', 'K', 'E', 'D', '-', 'L'], ['S', '-', 'E', '-', 'S', 'K', 'Y']]

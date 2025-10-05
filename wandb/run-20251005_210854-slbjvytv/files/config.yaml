@@ -1,0 +1,81 @@
+_wandb:
+    value:
+        cli_version: 0.22.1
+        e:
+            b8hgn7zofj9eowm3qme7lzvvp3t83v8c:
+                apple:
+                    ecpuCores: 6
+                    gpuCores: 10
+                    memoryGb: 16
+                    name: Apple M4
+                    pcpuCores: 4
+                    ramTotalBytes: "17179869184"
+                    swapTotalBytes: "2147483648"
+                args:
+                    - --environment=tic_tac_toe
+                    - --observation_type=txt
+                    - --agent=api_agent
+                    - --num_demonstrations=4
+                cpu_count: 10
+                cpu_count_logical: 10
+                disk:
+                    /:
+                        total: "494384795648"
+                        used: "99833372672"
+                email: pranavsrv10@gmail.com
+                executable: /opt/anaconda3/envs/lm_act/bin/python
+                git:
+                    commit: 66563bbd7e0bb8c10472bd7390e64404d692aa43
+                    remote: https://github.com/google-deepmind/lm_act.git
+                host: Pranavs-MacBook-Air.local
+                memory:
+                    total: "17179869184"
+                os: macOS-15.5-arm64-arm-64bit
+                program: -m lm_act.src.main
+                python: CPython 3.11.13
+                root: /Users/psrv19/Documents/Leiden/Uni/S2/SADRL/lm_act
+                startedAt: "2025-10-05T19:08:54.540082Z"
+                writerId: b8hgn7zofj9eowm3qme7lzvvp3t83v8c
+        m: []
+        python_version: 3.11.13
+        t:
+            "1":
+                - 12
+                - 95
+            "2":
+                - 12
+                - 95
+            "3":
+                - 2
+                - 16
+                - 61
+                - 62
+            "4": 3.11.13
+            "5": 0.22.1
+            "12": 0.22.1
+            "13": darwin-arm64
+agent:
+    value:
+        action_type: txt
+        model_name: google/gemini-2.5-flash-lite-preview-09-2025
+        name: api_agent
+environment:
+    value:
+        action_type: txt
+        name: tic_tac_toe
+        observation_type: txt
+        render_coordinates: false
+        seed: 0
+num_demonstrations:
+    value: 4
+num_evaluation_episodes:
+    value: 100
+num_evaluation_steps:
+    value: 100
+prompt:
+    value:
+        include_past_actions: true
+        show_legal_actions: false
+        use_chain_of_thought: false
+replay_episode:
+    value: false

@@ -1,0 +1,451 @@
++----+----+----+----+----+----+----+
+| 01 |    | 02 | ## | 03 |    | 04 |
++----+----+----+----+----+----+----+
+|    | ## |    | ## |    | ## |    |
++----+----+----+----+----+----+----+
+| 05 | 06 |    |    |    | ## |    |
++----+----+----+----+----+----+----+
+| ## |    | ## | ## | ## | ## |    |
++----+----+----+----+----+----+----+
+| ## | 07 |    | 08 |    | 09 | ## |
++----+----+----+----+----+----+----+
+| ## |    | ## |    | ## |    | ## |
++----+----+----+----+----+----+----+
+| ## | 10 |    |    |    |    |    |
++----+----+----+----+----+----+----+
+
+Across:
+ 1: Papa John's delivery
+ 3: Bonsai or origami
+ 5: Candy that's pulled
+ 7: Fiber from the East
+10: Arafat of the PLO
+Down:
+ 1: Poker winner's haul
+ 2: Toymaker for Santa
+ 3: "___ day now..."
+ 4: Bit of Watergate evidence
+ 6: Orderly grouping
+ 8: "___ Doubtfire"
+ 9: Prior's "prior"
+
+Solution:
+D1: POT (0, 0)
+A1: PIE (0, 0)
+D2: ELF (0, 2)
+D3: ANY (0, 4)
+A3: ART (0, 4)
+D4: TAPE (0, 6)
+A5: TAFFY (2, 0)
+D6: ARRAY (2, 1)
+A7: RAMIE (4, 1)
+D8: MRS (4, 3)
+D9: ERE (4, 5)
+A10: YASSER (6, 1)+----+----+----+----+----+----+----+
+| 01 |    | 02 | ## | 03 |    | 04 |
++----+----+----+----+----+----+----+
+|    | ## |    | ## |    | ## |    |
++----+----+----+----+----+----+----+
+| 05 |  A |    |    |    | ## |    |
++----+----+----+----+----+----+----+
+| ## |  R | ## | ## | ## | ## |    |
++----+----+----+----+----+----+----+
+| ## |  R |    | 08 |    | 09 | ## |
++----+----+----+----+----+----+----+
+| ## |  A | ## |    | ## |    | ## |
++----+----+----+----+----+----+----+
+| ## |  Y |    |    |    |    |    |
++----+----+----+----+----+----+----+
+
+Across:
+ 1: Papa John's delivery
+ 3: Bonsai or origami
+ 5: Candy that's pulled
+ 7: Fiber from the East
+10: Arafat of the PLO
+Down:
+ 1: Poker winner's haul
+ 2: Toymaker for Santa
+ 3: "___ day now..."
+ 4: Bit of Watergate evidence
+ 6: Orderly grouping
+ 8: "___ Doubtfire"
+ 9: Prior's "prior"
+
+Solution:
+D1: POT (0, 0)
+A1: PIE (0, 0)
+D2: ELF (0, 2)
+D3: ANY (0, 4)
+A3: ART (0, 4)
+D4: TAPE (0, 6)
+A5: TAFFY (2, 0)
+A7: RAMIE (4, 1)
+D8: MRS (4, 3)
+D9: ERE (4, 5)
+A10: YASSER (6, 1)+----+----+----+----+----+----+----+
+| 01 |    | 02 | ## | 03 |    |  T |
++----+----+----+----+----+----+----+
+|    | ## |    | ## |    | ## |  A |
++----+----+----+----+----+----+----+
+| 05 |  A |    |    |    | ## |  P |
++----+----+----+----+----+----+----+
+| ## |  R | ## | ## | ## | ## |  E |
++----+----+----+----+----+----+----+
+| ## |  R |    | 08 |    | 09 | ## |
++----+----+----+----+----+----+----+
+| ## |  A | ## |    | ## |    | ## |
++----+----+----+----+----+----+----+
+| ## |  Y |    |    |    |    |    |
++----+----+----+----+----+----+----+
+
+Across:
+ 1: Papa John's delivery
+ 3: Bonsai or origami
+ 5: Candy that's pulled
+ 7: Fiber from the East
+10: Arafat of the PLO
+Down:
+ 1: Poker winner's haul
+ 2: Toymaker for Santa
+ 3: "___ day now..."
+ 4: Bit of Watergate evidence
+ 6: Orderly grouping
+ 8: "___ Doubtfire"
+ 9: Prior's "prior"
+
+Solution:
+D1: POT (0, 0)
+A1: PIE (0, 0)
+D2: ELF (0, 2)
+D3: ANY (0, 4)
+A3: ART (0, 4)
+A5: TAFFY (2, 0)
+A7: RAMIE (4, 1)
+D8: MRS (4, 3)
+D9: ERE (4, 5)
+A10: YASSER (6, 1)+----+----+----+----+----+----+----+
+| 01 |    | 02 | ## | 03 |    |  T |
++----+----+----+----+----+----+----+
+|    | ## |    | ## |    | ## |  A |
++----+----+----+----+----+----+----+
+| 05 |  A |    |    |    | ## |  P |
++----+----+----+----+----+----+----+
+| ## |  R | ## | ## | ## | ## |  E |
++----+----+----+----+----+----+----+
+| ## |  R |    | 08 |    |  E | ## |
++----+----+----+----+----+----+----+
+| ## |  A | ## |    | ## |  R | ## |
++----+----+----+----+----+----+----+
+| ## |  Y |    |    |    |  E |    |
++----+----+----+----+----+----+----+
+
+Across:
+ 1: Papa John's delivery
+ 3: Bonsai or origami
+ 5: Candy that's pulled
+ 7: Fiber from the East
+10: Arafat of the PLO
+Down:
+ 1: Poker winner's haul
+ 2: Toymaker for Santa
+ 3: "___ day now..."
+ 4: Bit of Watergate evidence
+ 6: Orderly grouping
+ 8: "___ Doubtfire"
+ 9: Prior's "prior"
+
+Solution:
+D1: POT (0, 0)
+A1: PIE (0, 0)
+D2: ELF (0, 2)
+D3: ANY (0, 4)
+A3: ART (0, 4)
+A5: TAFFY (2, 0)
+A7: RAMIE (4, 1)
+D8: MRS (4, 3)
+A10: YASSER (6, 1)+----+----+----+----+----+----+----+
+| 01 |    | 02 | ## | 03 |    |  T |
++----+----+----+----+----+----+----+
+|    | ## |    | ## |    | ## |  A |
++----+----+----+----+----+----+----+
+| 05 |  A |    |    |    | ## |  P |
++----+----+----+----+----+----+----+
+| ## |  R | ## | ## | ## | ## |  E |
++----+----+----+----+----+----+----+
+| ## |  R |  A |  M |  I |  E | ## |
++----+----+----+----+----+----+----+
+| ## |  A | ## |    | ## |  R | ## |
++----+----+----+----+----+----+----+
+| ## |  Y |    |    |    |  E |    |
++----+----+----+----+----+----+----+
+
+Across:
+ 1: Papa John's delivery
+ 3: Bonsai or origami
+ 5: Candy that's pulled
+ 7: Fiber from the East
+10: Arafat of the PLO
+Down:
+ 1: Poker winner's haul
+ 2: Toymaker for Santa
+ 3: "___ day now..."
+ 4: Bit of Watergate evidence
+ 6: Orderly grouping
+ 8: "___ Doubtfire"
+ 9: Prior's "prior"
+
+Solution:
+D1: POT (0, 0)
+A1: PIE (0, 0)
+D2: ELF (0, 2)
+D3: ANY (0, 4)
+A3: ART (0, 4)
+A5: TAFFY (2, 0)
+D8: MRS (4, 3)
+A10: YASSER (6, 1)+----+----+----+----+----+----+----+
+| 01 |    | 02 | ## |  A |  R |  T |
++----+----+----+----+----+----+----+
+|    | ## |    | ## |    | ## |  A |
++----+----+----+----+----+----+----+
+| 05 |  A |    |    |    | ## |  P |
++----+----+----+----+----+----+----+
+| ## |  R | ## | ## | ## | ## |  E |
++----+----+----+----+----+----+----+
+| ## |  R |  A |  M |  I |  E | ## |
++----+----+----+----+----+----+----+
+| ## |  A | ## |    | ## |  R | ## |
++----+----+----+----+----+----+----+
+| ## |  Y |    |    |    |  E |    |
++----+----+----+----+----+----+----+
+
+Across:
+ 1: Papa John's delivery
+ 3: Bonsai or origami
+ 5: Candy that's pulled
+ 7: Fiber from the East
+10: Arafat of the PLO
+Down:
+ 1: Poker winner's haul
+ 2: Toymaker for Santa
+ 3: "___ day now..."
+ 4: Bit of Watergate evidence
+ 6: Orderly grouping
+ 8: "___ Doubtfire"
+ 9: Prior's "prior"
+
+Solution:
+D1: POT (0, 0)
+A1: PIE (0, 0)
+D2: ELF (0, 2)
+D3: ANY (0, 4)
+A5: TAFFY (2, 0)
+D8: MRS (4, 3)
+A10: YASSER (6, 1)+----+----+----+----+----+----+----+
+| 01 |    |  E | ## |  A |  R |  T |
++----+----+----+----+----+----+----+
+|    | ## |  L | ## |    | ## |  A |
++----+----+----+----+----+----+----+
+| 05 |  A |  F |    |    | ## |  P |
++----+----+----+----+----+----+----+
+| ## |  R | ## | ## | ## | ## |  E |
++----+----+----+----+----+----+----+
+| ## |  R |  A |  M |  I |  E | ## |
++----+----+----+----+----+----+----+
+| ## |  A | ## |    | ## |  R | ## |
++----+----+----+----+----+----+----+
+| ## |  Y |    |    |    |  E |    |
++----+----+----+----+----+----+----+
+
+Across:
+ 1: Papa John's delivery
+ 3: Bonsai or origami
+ 5: Candy that's pulled
+ 7: Fiber from the East
+10: Arafat of the PLO
+Down:
+ 1: Poker winner's haul
+ 2: Toymaker for Santa
+ 3: "___ day now..."
+ 4: Bit of Watergate evidence
+ 6: Orderly grouping
+ 8: "___ Doubtfire"
+ 9: Prior's "prior"
+
+Solution:
+D1: POT (0, 0)
+A1: PIE (0, 0)
+D3: ANY (0, 4)
+A5: TAFFY (2, 0)
+D8: MRS (4, 3)
+A10: YASSER (6, 1)+----+----+----+----+----+----+----+
+|  P |    |  E | ## |  A |  R |  T |
++----+----+----+----+----+----+----+
+|  O | ## |  L | ## |    | ## |  A |
++----+----+----+----+----+----+----+
+|  T |  A |  F |    |    | ## |  P |
++----+----+----+----+----+----+----+
+| ## |  R | ## | ## | ## | ## |  E |
++----+----+----+----+----+----+----+
+| ## |  R |  A |  M |  I |  E | ## |
++----+----+----+----+----+----+----+
+| ## |  A | ## |    | ## |  R | ## |
++----+----+----+----+----+----+----+
+| ## |  Y |    |    |    |  E |    |
++----+----+----+----+----+----+----+
+
+Across:
+ 1: Papa John's delivery
+ 3: Bonsai or origami
+ 5: Candy that's pulled
+ 7: Fiber from the East
+10: Arafat of the PLO
+Down:
+ 1: Poker winner's haul
+ 2: Toymaker for Santa
+ 3: "___ day now..."
+ 4: Bit of Watergate evidence
+ 6: Orderly grouping
+ 8: "___ Doubtfire"
+ 9: Prior's "prior"
+
+Solution:
+A1: PIE (0, 0)
+D3: ANY (0, 4)
+A5: TAFFY (2, 0)
+D8: MRS (4, 3)
+A10: YASSER (6, 1)+----+----+----+----+----+----+----+
+|  P |  I |  E | ## |  A |  R |  T |
++----+----+----+----+----+----+----+
+|  O | ## |  L | ## |    | ## |  A |
++----+----+----+----+----+----+----+
+|  T |  A |  F |    |    | ## |  P |
++----+----+----+----+----+----+----+
+| ## |  R | ## | ## | ## | ## |  E |
++----+----+----+----+----+----+----+
+| ## |  R |  A |  M |  I |  E | ## |
++----+----+----+----+----+----+----+
+| ## |  A | ## |    | ## |  R | ## |
++----+----+----+----+----+----+----+
+| ## |  Y |    |    |    |  E |    |
++----+----+----+----+----+----+----+
+
+Across:
+ 1: Papa John's delivery
+ 3: Bonsai or origami
+ 5: Candy that's pulled
+ 7: Fiber from the East
+10: Arafat of the PLO
+Down:
+ 1: Poker winner's haul
+ 2: Toymaker for Santa
+ 3: "___ day now..."
+ 4: Bit of Watergate evidence
+ 6: Orderly grouping
+ 8: "___ Doubtfire"
+ 9: Prior's "prior"
+
+Solution:
+D3: ANY (0, 4)
+A5: TAFFY (2, 0)
+D8: MRS (4, 3)
+A10: YASSER (6, 1)+----+----+----+----+----+----+----+
+|  P |  I |  E | ## |  A |  R |  T |
++----+----+----+----+----+----+----+
+|  O | ## |  L | ## |    | ## |  A |
++----+----+----+----+----+----+----+
+|  T |  A |  F |  F |  Y | ## |  P |
++----+----+----+----+----+----+----+
+| ## |  R | ## | ## | ## | ## |  E |
++----+----+----+----+----+----+----+
+| ## |  R |  A |  M |  I |  E | ## |
++----+----+----+----+----+----+----+
+| ## |  A | ## |    | ## |  R | ## |
++----+----+----+----+----+----+----+
+| ## |  Y |    |    |    |  E |    |
++----+----+----+----+----+----+----+
+
+Across:
+ 1: Papa John's delivery
+ 3: Bonsai or origami
+ 5: Candy that's pulled
+ 7: Fiber from the East
+10: Arafat of the PLO
+Down:
+ 1: Poker winner's haul
+ 2: Toymaker for Santa
+ 3: "___ day now..."
+ 4: Bit of Watergate evidence
+ 6: Orderly grouping
+ 8: "___ Doubtfire"
+ 9: Prior's "prior"
+
+Solution:
+D3: ANY (0, 4)
+D8: MRS (4, 3)
+A10: YASSER (6, 1)+----+----+----+----+----+----+----+
+|  P |  I |  E | ## |  A |  R |  T |
++----+----+----+----+----+----+----+
+|  O | ## |  L | ## |    | ## |  A |
++----+----+----+----+----+----+----+
+|  T |  A |  F |  F |  Y | ## |  P |
++----+----+----+----+----+----+----+
+| ## |  R | ## | ## | ## | ## |  E |
++----+----+----+----+----+----+----+
+| ## |  R |  A |  M |  I |  E | ## |
++----+----+----+----+----+----+----+
+| ## |  A | ## |    | ## |  R | ## |
++----+----+----+----+----+----+----+
+| ## |  Y |  A |  S |  S |  E |  R |
++----+----+----+----+----+----+----+
+
+Across:
+ 1: Papa John's delivery
+ 3: Bonsai or origami
+ 5: Candy that's pulled
+ 7: Fiber from the East
+10: Arafat of the PLO
+Down:
+ 1: Poker winner's haul
+ 2: Toymaker for Santa
+ 3: "___ day now..."
+ 4: Bit of Watergate evidence
+ 6: Orderly grouping
+ 8: "___ Doubtfire"
+ 9: Prior's "prior"
+
+Solution:
+D3: ANY (0, 4)
+D8: MRS (4, 3)+----+----+----+----+----+----+----+
+|  P |  I |  E | ## |  A |  R |  T |
++----+----+----+----+----+----+----+
+|  O | ## |  L | ## |  N | ## |  A |
++----+----+----+----+----+----+----+
+|  T |  A |  F |  F |  Y | ## |  P |
++----+----+----+----+----+----+----+
+| ## |  R | ## | ## | ## | ## |  E |
++----+----+----+----+----+----+----+
+| ## |  R |  A |  M |  I |  E | ## |
++----+----+----+----+----+----+----+
+| ## |  A | ## |    | ## |  R | ## |
++----+----+----+----+----+----+----+
+| ## |  Y |  A |  S |  S |  E |  R |
++----+----+----+----+----+----+----+
+
+Across:
+ 1: Papa John's delivery
+ 3: Bonsai or origami
+ 5: Candy that's pulled
+ 7: Fiber from the East
+10: Arafat of the PLO
+Down:
+ 1: Poker winner's haul
+ 2: Toymaker for Santa
+ 3: "___ day now..."
+ 4: Bit of Watergate evidence
+ 6: Orderly grouping
+ 8: "___ Doubtfire"
+ 9: Prior's "prior"
+
+Solution:
+D8: MRS (4, 3)                  ú      Ð      —      O      ø      ’"      &      ‘)      ø,      

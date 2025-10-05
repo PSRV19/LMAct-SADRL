@@ -1,0 +1,397 @@
++----+----+----+----+----+----+----+
+| ## | 01 |    | 02 |    |    | ## |
++----+----+----+----+----+----+----+
+| ## |    | ## |    | ## | ## | ## |
++----+----+----+----+----+----+----+
+| ## | 03 | 04 |    | 05 | ## | 06 |
++----+----+----+----+----+----+----+
+| 07 | ## |    | ## | 08 |    |    |
++----+----+----+----+----+----+----+
+| 09 |    |    |    |    | ## |    |
++----+----+----+----+----+----+----+
+|    | ## |    | ## |    | ## |    |
++----+----+----+----+----+----+----+
+|    | ## | ## | 10 |    |    |    |
++----+----+----+----+----+----+----+
+
+Across:
+ 1: Manhandles
+ 3: "I'll take a ___ at it"
+ 8: Volleyball court shout
+ 9: Burger topping
+10: Door openers
+Down:
+ 1: RNs' colleagues
+ 2: Tony winner Hagen
+ 4: "Right ___ way!"
+ 5: Eating or drinking spree
+ 6: Becomes less cordial
+ 7: Thunderous sound
+
+Solution:
+D1: MDS (0, 1)
+A1: MAULS (0, 1)
+D2: UTA (0, 3)
+A3: STAB (2, 1)
+D4: THIS (2, 2)
+D5: BINGE (2, 4)
+D6: COOLS (2, 6)
+D7: BOOM (3, 0)
+A8: IGO (3, 4)
+A9: ONION (4, 0)
+A10: KEYS (6, 3)+----+----+----+----+----+----+----+
+| ## | 01 |    | 02 |    |    | ## |
++----+----+----+----+----+----+----+
+| ## |    | ## |    | ## | ## | ## |
++----+----+----+----+----+----+----+
+| ## | 03 | 04 |    | 05 | ## |  C |
++----+----+----+----+----+----+----+
+| 07 | ## |    | ## | 08 |    |  O |
++----+----+----+----+----+----+----+
+| 09 |    |    |    |    | ## |  O |
++----+----+----+----+----+----+----+
+|    | ## |    | ## |    | ## |  L |
++----+----+----+----+----+----+----+
+|    | ## | ## | 10 |    |    |  S |
++----+----+----+----+----+----+----+
+
+Across:
+ 1: Manhandles
+ 3: "I'll take a ___ at it"
+ 8: Volleyball court shout
+ 9: Burger topping
+10: Door openers
+Down:
+ 1: RNs' colleagues
+ 2: Tony winner Hagen
+ 4: "Right ___ way!"
+ 5: Eating or drinking spree
+ 6: Becomes less cordial
+ 7: Thunderous sound
+
+Solution:
+D1: MDS (0, 1)
+A1: MAULS (0, 1)
+D2: UTA (0, 3)
+A3: STAB (2, 1)
+D4: THIS (2, 2)
+D5: BINGE (2, 4)
+D7: BOOM (3, 0)
+A8: IGO (3, 4)
+A9: ONION (4, 0)
+A10: KEYS (6, 3)+----+----+----+----+----+----+----+
+| ## | 01 |    | 02 |    |    | ## |
++----+----+----+----+----+----+----+
+| ## |    | ## |    | ## | ## | ## |
++----+----+----+----+----+----+----+
+| ## | 03 |  T |    | 05 | ## |  C |
++----+----+----+----+----+----+----+
+| 07 | ## |  H | ## | 08 |    |  O |
++----+----+----+----+----+----+----+
+| 09 |    |  I |    |    | ## |  O |
++----+----+----+----+----+----+----+
+|    | ## |  S | ## |    | ## |  L |
++----+----+----+----+----+----+----+
+|    | ## | ## | 10 |    |    |  S |
++----+----+----+----+----+----+----+
+
+Across:
+ 1: Manhandles
+ 3: "I'll take a ___ at it"
+ 8: Volleyball court shout
+ 9: Burger topping
+10: Door openers
+Down:
+ 1: RNs' colleagues
+ 2: Tony winner Hagen
+ 4: "Right ___ way!"
+ 5: Eating or drinking spree
+ 6: Becomes less cordial
+ 7: Thunderous sound
+
+Solution:
+D1: MDS (0, 1)
+A1: MAULS (0, 1)
+D2: UTA (0, 3)
+A3: STAB (2, 1)
+D5: BINGE (2, 4)
+D7: BOOM (3, 0)
+A8: IGO (3, 4)
+A9: ONION (4, 0)
+A10: KEYS (6, 3)+----+----+----+----+----+----+----+
+| ## | 01 |    | 02 |    |    | ## |
++----+----+----+----+----+----+----+
+| ## |    | ## |    | ## | ## | ## |
++----+----+----+----+----+----+----+
+| ## | 03 |  T |    | 05 | ## |  C |
++----+----+----+----+----+----+----+
+| 07 | ## |  H | ## | 08 |    |  O |
++----+----+----+----+----+----+----+
+| 09 |    |  I |    |    | ## |  O |
++----+----+----+----+----+----+----+
+|    | ## |  S | ## |    | ## |  L |
++----+----+----+----+----+----+----+
+|    | ## | ## |  K |  E |  Y |  S |
++----+----+----+----+----+----+----+
+
+Across:
+ 1: Manhandles
+ 3: "I'll take a ___ at it"
+ 8: Volleyball court shout
+ 9: Burger topping
+10: Door openers
+Down:
+ 1: RNs' colleagues
+ 2: Tony winner Hagen
+ 4: "Right ___ way!"
+ 5: Eating or drinking spree
+ 6: Becomes less cordial
+ 7: Thunderous sound
+
+Solution:
+D1: MDS (0, 1)
+A1: MAULS (0, 1)
+D2: UTA (0, 3)
+A3: STAB (2, 1)
+D5: BINGE (2, 4)
+D7: BOOM (3, 0)
+A8: IGO (3, 4)
+A9: ONION (4, 0)+----+----+----+----+----+----+----+
+| ## | 01 |    |  U |    |    | ## |
++----+----+----+----+----+----+----+
+| ## |    | ## |  T | ## | ## | ## |
++----+----+----+----+----+----+----+
+| ## | 03 |  T |  A | 05 | ## |  C |
++----+----+----+----+----+----+----+
+| 07 | ## |  H | ## | 08 |    |  O |
++----+----+----+----+----+----+----+
+| 09 |    |  I |    |    | ## |  O |
++----+----+----+----+----+----+----+
+|    | ## |  S | ## |    | ## |  L |
++----+----+----+----+----+----+----+
+|    | ## | ## |  K |  E |  Y |  S |
++----+----+----+----+----+----+----+
+
+Across:
+ 1: Manhandles
+ 3: "I'll take a ___ at it"
+ 8: Volleyball court shout
+ 9: Burger topping
+10: Door openers
+Down:
+ 1: RNs' colleagues
+ 2: Tony winner Hagen
+ 4: "Right ___ way!"
+ 5: Eating or drinking spree
+ 6: Becomes less cordial
+ 7: Thunderous sound
+
+Solution:
+D1: MDS (0, 1)
+A1: MAULS (0, 1)
+A3: STAB (2, 1)
+D5: BINGE (2, 4)
+D7: BOOM (3, 0)
+A8: IGO (3, 4)
+A9: ONION (4, 0)+----+----+----+----+----+----+----+
+| ## | 01 |    |  U |    |    | ## |
++----+----+----+----+----+----+----+
+| ## |    | ## |  T | ## | ## | ## |
++----+----+----+----+----+----+----+
+| ## | 03 |  T |  A | 05 | ## |  C |
++----+----+----+----+----+----+----+
+| 07 | ## |  H | ## | 08 |    |  O |
++----+----+----+----+----+----+----+
+|  O |  N |  I |  O |  N | ## |  O |
++----+----+----+----+----+----+----+
+|    | ## |  S | ## |    | ## |  L |
++----+----+----+----+----+----+----+
+|    | ## | ## |  K |  E |  Y |  S |
++----+----+----+----+----+----+----+
+
+Across:
+ 1: Manhandles
+ 3: "I'll take a ___ at it"
+ 8: Volleyball court shout
+ 9: Burger topping
+10: Door openers
+Down:
+ 1: RNs' colleagues
+ 2: Tony winner Hagen
+ 4: "Right ___ way!"
+ 5: Eating or drinking spree
+ 6: Becomes less cordial
+ 7: Thunderous sound
+
+Solution:
+D1: MDS (0, 1)
+A1: MAULS (0, 1)
+A3: STAB (2, 1)
+D5: BINGE (2, 4)
+D7: BOOM (3, 0)
+A8: IGO (3, 4)+----+----+----+----+----+----+----+
+| ## | 01 |    |  U |    |    | ## |
++----+----+----+----+----+----+----+
+| ## |    | ## |  T | ## | ## | ## |
++----+----+----+----+----+----+----+
+| ## |  S |  T |  A |  B | ## |  C |
++----+----+----+----+----+----+----+
+| 07 | ## |  H | ## | 08 |    |  O |
++----+----+----+----+----+----+----+
+|  O |  N |  I |  O |  N | ## |  O |
++----+----+----+----+----+----+----+
+|    | ## |  S | ## |    | ## |  L |
++----+----+----+----+----+----+----+
+|    | ## | ## |  K |  E |  Y |  S |
++----+----+----+----+----+----+----+
+
+Across:
+ 1: Manhandles
+ 3: "I'll take a ___ at it"
+ 8: Volleyball court shout
+ 9: Burger topping
+10: Door openers
+Down:
+ 1: RNs' colleagues
+ 2: Tony winner Hagen
+ 4: "Right ___ way!"
+ 5: Eating or drinking spree
+ 6: Becomes less cordial
+ 7: Thunderous sound
+
+Solution:
+D1: MDS (0, 1)
+A1: MAULS (0, 1)
+D5: BINGE (2, 4)
+D7: BOOM (3, 0)
+A8: IGO (3, 4)+----+----+----+----+----+----+----+
+| ## | 01 |    |  U |    |    | ## |
++----+----+----+----+----+----+----+
+| ## |    | ## |  T | ## | ## | ## |
++----+----+----+----+----+----+----+
+| ## |  S |  T |  A |  B | ## |  C |
++----+----+----+----+----+----+----+
+| 07 | ## |  H | ## |  I |    |  O |
++----+----+----+----+----+----+----+
+|  O |  N |  I |  O |  N | ## |  O |
++----+----+----+----+----+----+----+
+|    | ## |  S | ## |  G | ## |  L |
++----+----+----+----+----+----+----+
+|    | ## | ## |  K |  E |  Y |  S |
++----+----+----+----+----+----+----+
+
+Across:
+ 1: Manhandles
+ 3: "I'll take a ___ at it"
+ 8: Volleyball court shout
+ 9: Burger topping
+10: Door openers
+Down:
+ 1: RNs' colleagues
+ 2: Tony winner Hagen
+ 4: "Right ___ way!"
+ 5: Eating or drinking spree
+ 6: Becomes less cordial
+ 7: Thunderous sound
+
+Solution:
+D1: MDS (0, 1)
+A1: MAULS (0, 1)
+D7: BOOM (3, 0)
+A8: IGO (3, 4)+----+----+----+----+----+----+----+
+| ## | 01 |    |  U |    |    | ## |
++----+----+----+----+----+----+----+
+| ## |    | ## |  T | ## | ## | ## |
++----+----+----+----+----+----+----+
+| ## |  S |  T |  A |  B | ## |  C |
++----+----+----+----+----+----+----+
+|  B | ## |  H | ## |  I |    |  O |
++----+----+----+----+----+----+----+
+|  O |  N |  I |  O |  N | ## |  O |
++----+----+----+----+----+----+----+
+|  O | ## |  S | ## |  G | ## |  L |
++----+----+----+----+----+----+----+
+|  M | ## | ## |  K |  E |  Y |  S |
++----+----+----+----+----+----+----+
+
+Across:
+ 1: Manhandles
+ 3: "I'll take a ___ at it"
+ 8: Volleyball court shout
+ 9: Burger topping
+10: Door openers
+Down:
+ 1: RNs' colleagues
+ 2: Tony winner Hagen
+ 4: "Right ___ way!"
+ 5: Eating or drinking spree
+ 6: Becomes less cordial
+ 7: Thunderous sound
+
+Solution:
+D1: MDS (0, 1)
+A1: MAULS (0, 1)
+A8: IGO (3, 4)+----+----+----+----+----+----+----+
+| ## |  M |    |  U |    |    | ## |
++----+----+----+----+----+----+----+
+| ## |  D | ## |  T | ## | ## | ## |
++----+----+----+----+----+----+----+
+| ## |  S |  T |  A |  B | ## |  C |
++----+----+----+----+----+----+----+
+|  B | ## |  H | ## |  I |    |  O |
++----+----+----+----+----+----+----+
+|  O |  N |  I |  O |  N | ## |  O |
++----+----+----+----+----+----+----+
+|  O | ## |  S | ## |  G | ## |  L |
++----+----+----+----+----+----+----+
+|  M | ## | ## |  K |  E |  Y |  S |
++----+----+----+----+----+----+----+
+
+Across:
+ 1: Manhandles
+ 3: "I'll take a ___ at it"
+ 8: Volleyball court shout
+ 9: Burger topping
+10: Door openers
+Down:
+ 1: RNs' colleagues
+ 2: Tony winner Hagen
+ 4: "Right ___ way!"
+ 5: Eating or drinking spree
+ 6: Becomes less cordial
+ 7: Thunderous sound
+
+Solution:
+A1: MAULS (0, 1)
+A8: IGO (3, 4)+----+----+----+----+----+----+----+
+| ## |  M |  A |  U |  L |  S | ## |
++----+----+----+----+----+----+----+
+| ## |  D | ## |  T | ## | ## | ## |
++----+----+----+----+----+----+----+
+| ## |  S |  T |  A |  B | ## |  C |
++----+----+----+----+----+----+----+
+|  B | ## |  H | ## |  I |    |  O |
++----+----+----+----+----+----+----+
+|  O |  N |  I |  O |  N | ## |  O |
++----+----+----+----+----+----+----+
+|  O | ## |  S | ## |  G | ## |  L |
++----+----+----+----+----+----+----+
+|  M | ## | ## |  K |  E |  Y |  S |
++----+----+----+----+----+----+----+
+
+Across:
+ 1: Manhandles
+ 3: "I'll take a ___ at it"
+ 8: Volleyball court shout
+ 9: Burger topping
+10: Door openers
+Down:
+ 1: RNs' colleagues
+ 2: Tony winner Hagen
+ 4: "Right ___ way!"
+ 5: Eating or drinking spree
+ 6: Becomes less cordial
+ 7: Thunderous sound
+
+Solution:
+A8: IGO (3, 4)ê      Ã      Œ      D      í      …            „      ë       C$      Š'      

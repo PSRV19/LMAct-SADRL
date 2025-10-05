@@ -1,0 +1,51 @@
++----+----+----+----+----+----+----+
+| 01 |    |    | 02 |    | 03 | ## |
++----+----+----+----+----+----+----+
+|    | ## | ## |    | ## |    | ## |
++----+----+----+----+----+----+----+
+|    | ## | 04 |    |    | 05 | ## |
++----+----+----+----+----+----+----+
+|    | ## | ## |    | ## |    | ## |
++----+----+----+----+----+----+----+
+|    | ## | 06 | ## | 07 |    | 08 |
++----+----+----+----+----+----+----+
+| 09 |    |    | ## |    | ## |    |
++----+----+----+----+----+----+----+
+|    | ## | 10 |    |    |    |    |
++----+----+----+----+----+----+----+
+
+Across:
+ 1: "Just missed!"
+ 1: Skeleton's place?
+ 4: Los Angeles Angels logo item
+ 7: Habitual elbow-bender
+ 9: One on a beat
+10: Bow of silents and talkies
+Down:
+ 1: Provide for free
+ 1: Honda Civic or Ford Focus
+ 2: Word with stick or dash
+ 3: Complete, informally
+ 5: Conquistador's treasure
+ 6: Scannable product ID
+ 7: Reducing salon
+ 8: World's most popular drink after water
+
+Solution:
+A1: CLOSE (0, 0)
+D1: COMP (0, 0)
+D1: COMPACT (0, 0)
+A1: CLOSET (0, 0)
+D2: SLAP (0, 3)
+D3: THORO (0, 5)
+A4: HALO (2, 2)
+D5: ORO (2, 5)
+D6: UPC (4, 2)
+A7: SOT (4, 4)
+D7: SPA (4, 4)
+D8: TEA (4, 6)
+A9: COP (5, 0)
+A10: CLARA (6, 2)
+
+Grid:
+[['C', 'L', 'O', 'S', 'E', 'T', '-'], ['O', '-', '-', 'L', '-', 'H', '-'], ['M', '-', 'H', 'A', 'L', 'O', '-'], ['P', '-', '-', 'P', '-', 'R', '-'], ['A', '-', 'U', '-', 'S', 'O', 'T'], ['C', 'O', 'P', '-', 'P', '-', 'E'], ['T', '-', 'C', 'L', 'A', 'R', 'A']]

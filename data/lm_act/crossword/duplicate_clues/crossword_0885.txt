@@ -1,0 +1,53 @@
++----+----+----+----+----+----+----+
+| ## | 01 | 02 |    |    | 03 | ## |
++----+----+----+----+----+----+----+
+| ## | ## |    | ## | ## |    | ## |
++----+----+----+----+----+----+----+
+| 04 | ## | 05 |    | 06 |    | 07 |
++----+----+----+----+----+----+----+
+| 08 |    |    | ## |    | ## |    |
++----+----+----+----+----+----+----+
+|    | ## |    | ## | 09 |    | 10 |
++----+----+----+----+----+----+----+
+| 11 |    |    |    |    | ## |    |
++----+----+----+----+----+----+----+
+|    | ## |    | ## | 12 |    |    |
++----+----+----+----+----+----+----+
+
+Across:
+ 1: Smoking, to some
+ 2: Somewhat
+ 5: Reuner in New Haven
+ 5: Wiesel and Ducommun
+ 8: "___ Drink Man Woman" (Ang Lee movie)
+ 9: Mysterious sky sight
+11: Early TV puppeteer Lewis
+12: Shirt depicting a rock star
+Down:
+ 2: Act as lookout for, say
+ 2: Support of a criminal
+ 3: Bolo, for example
+ 4: Grammar lesson topic
+ 6: Employee's last words
+ 7: Tea cake
+10: "Firstly..."
+
+Solution:
+A1: HABIT (0, 1)
+D2: ABET (0, 2)
+A2: ABIT (0, 2)
+D2: ABETTAL (0, 2)
+D3: TIE (0, 5)
+D4: TENSE (2, 0)
+A5: ELI (2, 2)
+A5: ELIES (2, 2)
+D6: IQUIT (2, 4)
+D7: SCONE (2, 6)
+A8: EAT (3, 0)
+A9: UFO (4, 4)
+D10: ONE (4, 6)
+A11: SHARI (5, 0)
+A12: TEE (6, 4)
+
+Grid:
+[['-', 'H', 'A', 'B', 'I', 'T', '-'], ['-', '-', 'B', '-', '-', 'I', '-'], ['T', '-', 'E', 'L', 'I', 'E', 'S'], ['E', 'A', 'T', '-', 'Q', '-', 'C'], ['N', '-', 'T', '-', 'U', 'F', 'O'], ['S', 'H', 'A', 'R', 'I', '-', 'N'], ['E', '-', 'L', '-', 'T', 'E', 'E']]

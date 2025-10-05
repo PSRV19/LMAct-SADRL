@@ -1,0 +1,1 @@
+{"num_invalid_actions":0,"_wandb":{"runtime":124},"num_illegal_actions":2,"_runtime":124.365910959,"average_score":0.05,"episode":99,"num_steps":3,"score":1,"num_empty_actions":0,"_step":99,"average_num_invalid_actions":0,"average_num_steps":2.43,"_timestamp":1.759691460186799e+09,"average_num_illegal_actions":1.07,"average_num_empty_actions":0}

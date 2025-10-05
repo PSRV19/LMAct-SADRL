@@ -1,0 +1,51 @@
++----+----+----+----+----+----+----+
+| ## | 01 |    | 02 |    | 03 | ## |
++----+----+----+----+----+----+----+
+| ## |    | ## |    | ## |    | ## |
++----+----+----+----+----+----+----+
+| ## |    | ## | 04 |    | 05 |    |
++----+----+----+----+----+----+----+
+| ## |    | ## | ## | ## |    | ## |
++----+----+----+----+----+----+----+
+| ## | 06 | 07 |    | 08 |    | 09 |
++----+----+----+----+----+----+----+
+| ## | ## |    | ## |    | ## |    |
++----+----+----+----+----+----+----+
+| 10 |    |    | ## | 11 |    |    |
++----+----+----+----+----+----+----+
+
+Across:
+ 1: Willie Nelson hair feature
+ 4: Was on a slate
+ 4: Rampur royalty
+ 6: Mister, in Lima
+ 6: Married woman, in Madrid
+10: Persian or Oriental
+11: Prefix with warrior or tourist
+Down:
+ 1: RAM units
+ 2: Go public with
+ 3: Blood drive participant
+ 5: Here-there connector
+ 7: Custard component
+ 8: Long-distance dialing requirement
+ 9: Fuss
+
+Solution:
+A1: BRAID (0, 1)
+D1: BYTES (0, 1)
+D2: AIR (0, 3)
+D3: DONOR (0, 5)
+A4: RAN (2, 3)
+A4: RANI (2, 3)
+D5: NOR (2, 5)
+A6: SENOR (4, 1)
+A6: SENORA (4, 1)
+D7: EGG (4, 2)
+D8: ONE (4, 4)
+D9: ADO (4, 6)
+A10: RUG (6, 0)
+A11: ECO (6, 4)
+
+Grid:
+[['-', 'B', 'R', 'A', 'I', 'D', '-'], ['-', 'Y', '-', 'I', '-', 'O', '-'], ['-', 'T', '-', 'R', 'A', 'N', 'I'], ['-', 'E', '-', '-', '-', 'O', '-'], ['-', 'S', 'E', 'N', 'O', 'R', 'A'], ['-', '-', 'G', '-', 'N', '-', 'D'], ['R', 'U', 'G', '-', 'E', 'C', 'O']]

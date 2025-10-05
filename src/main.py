@@ -23,6 +23,9 @@ from absl import flags
 import immutabledict
 import numpy as np
 import tqdm
+# wandb
+import wandb
+import dataclasses
 
 from lm_act.src import config as config_lib
 from lm_act.src import evaluate
@@ -31,6 +34,7 @@ from lm_act.src.agents import crossword as crossword_agent
 from lm_act.src.agents import grid_world as grid_world_agent
 from lm_act.src.agents import random as random_agent
 from lm_act.src.agents import tic_tac_toe as tic_tac_toe_agent
+from lm_act.src.agents import api_agent as api_agent
 from lm_act.src.environments import chess
 from lm_act.src.environments import crossword
 from lm_act.src.environments import dm_control
@@ -71,6 +75,7 @@ _AGENT = flags.DEFINE_enum(
         'crossword_oracle',
         'grid_world_shortest_path',
         'tic_tac_toe_minimax',
+        'api_agent',
     ],
     help='The agent to evaluate.',
 )
@@ -89,6 +94,11 @@ _NUM_EVALUATION_STEPS = flags.DEFINE_integer(
     default=100,
     help='The number of steps to evaluate.',
 )
+_MODEL_NAME = flags.DEFINE_string(
+    name='model_name',
+    default=None,
+    help='The name of the model to use for API agents.'
+)
 
 _CONFIG_BY_ENVIRONMENT = immutabledict.immutabledict({
     'chess': chess.EnvironmentConfig,
@@ -103,6 +113,7 @@ _CONFIG_BY_AGENT = immutabledict.immutabledict({
     'crossword_oracle': crossword_agent.OracleAgentConfig,
     'grid_world_shortest_path': grid_world_agent.ShortestPathAgentConfig,
     'tic_tac_toe_minimax': tic_tac_toe_agent.MinimaxAgentConfig,
+    'api_agent': api_agent.ApiAgentConfig
 })
 
 
@@ -112,9 +123,35 @@ def main(argv: Sequence[str]) -> None:
 
   logging.getLogger().setLevel(logging.WARNING)
 
-  print(f'Environment: {_ENVIRONMENT.value}')
-  print(f'Observation type: {_OBSERVATION_TYPE.value}')
-  print(f'Agent: {_AGENT.value}')
+  agent_config_kwargs = {'action_type': _ACTION_TYPE.value}
+  
+  if _MODEL_NAME.value:
+    agent_config_kwargs['model_name'] = _MODEL_NAME.value
+  
+  agent_config = _CONFIG_BY_AGENT[_AGENT.value](**agent_config_kwargs)
+  
+  experiment_config = config_lib.Experiment(
+      num_demonstrations=_NUM_DEMONSTRATIONS.value,
+      num_evaluation_steps=_NUM_EVALUATION_STEPS.value,
+      agent=agent_config,  
+      environment=_CONFIG_BY_ENVIRONMENT[_ENVIRONMENT.value](
+          observation_type=_OBSERVATION_TYPE.value,
+          action_type=_ACTION_TYPE.value,
+      ),
+      prompt=config_lib.Prompt(
+          show_legal_actions=False, 
+          use_chain_of_thought=False,
+      ),
+  )
+
+  wandb.init(
+    project="lm-act",
+    config=dataclasses.asdict(experiment_config)
+  )
+
+  print(f'Environment: {experiment_config.environment.name}')
+  print(f'Observation type: {experiment_config.environment.observation_type}')
+  print(f'Agent: {experiment_config.agent.name}')
   print(f'Num evaluation episodes: {_NUM_EVALUTION_EPISODES.value}')
 
   scores = list()
@@ -132,21 +169,7 @@ def main(argv: Sequence[str]) -> None:
         episode_num_empty_actions,
     ) = evaluate.evaluate_episode(
         episode_idx=episode,
-        config=config_lib.Experiment(
-            num_demonstrations=_NUM_DEMONSTRATIONS.value,
-            num_evaluation_steps=_NUM_EVALUATION_STEPS.value,
-            agent=_CONFIG_BY_AGENT[_AGENT.value](
-                action_type=_ACTION_TYPE.value,
-            ),
-            environment=_CONFIG_BY_ENVIRONMENT[_ENVIRONMENT.value](
-                observation_type=_OBSERVATION_TYPE.value,
-                action_type=_ACTION_TYPE.value,
-            ),
-            prompt=config_lib.Prompt(
-                show_legal_actions=None,
-                use_chain_of_thought=None,
-            ),
-        ),
+        config=experiment_config, 
     )
 
     scores.append(episode_score)
@@ -155,20 +178,25 @@ def main(argv: Sequence[str]) -> None:
     num_illegal_actions.append(episode_num_illegal_actions)
     num_empty_actions.append(episode_num_empty_actions)
 
-    logging.info({
+    wandb.log({
         'episode': episode,
         'score': episode_score,
         'num_steps': episode_num_steps,
         'num_invalid_actions': episode_num_invalid_actions,
         'num_illegal_actions': episode_num_illegal_actions,
         'num_empty_actions': episode_num_empty_actions,
-    })
+    }, step=episode)
+
+  wandb.summary['average_score'] = np.mean(scores)
+  wandb.summary['average_num_steps'] = np.mean(num_steps)
+  wandb.summary['average_num_invalid_actions'] = np.mean(num_invalid_actions)
+  wandb.summary['average_num_illegal_actions'] = np.mean(num_illegal_actions)
+  wandb.summary['average_num_empty_actions'] = np.mean(num_empty_actions)
 
   print(f'Average score: {np.mean(scores):.2f}')
-  print(f'Average num steps: {np.mean(num_steps):.2f}')
-  print(f'Average num invalid actions: {np.mean(num_invalid_actions):.2f}')
-  print(f'Average num illegal actions: {np.mean(num_illegal_actions):.2f}')
-  print(f'Average num empty actions: {np.mean(num_empty_actions):.2f}')
+  print('Run complete. View results on Weights & Biases.')
+
+  wandb.finish()
 
 
 if __name__ == '__main__':
