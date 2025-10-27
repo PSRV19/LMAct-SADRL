@@ -28,3 +28,7 @@ wandb/
 *.wandb
 *.log
 wandb/latest-run
+
+# Ignore other repos and data 
+data/
+Stockfish/
