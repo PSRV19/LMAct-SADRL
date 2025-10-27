@@ -34,7 +34,8 @@ from lm_act.src.agents import crossword as crossword_agent
 from lm_act.src.agents import grid_world as grid_world_agent
 from lm_act.src.agents import random as random_agent
 from lm_act.src.agents import tic_tac_toe as tic_tac_toe_agent
-from lm_act.src.agents import api_agent as api_agent
+from lm_act.src.agents import gpt4o_agent as gpt4o_agent
+from lm_act.src.agents import o1mini_agent as o1mini_agent
 from lm_act.src.environments import chess
 from lm_act.src.environments import crossword
 from lm_act.src.environments import dm_control
@@ -75,7 +76,8 @@ _AGENT = flags.DEFINE_enum(
         'crossword_oracle',
         'grid_world_shortest_path',
         'tic_tac_toe_minimax',
-        'api_agent',
+        'gpt4o_agent',
+        'o1mini_agent',
     ],
     help='The agent to evaluate.',
 )
@@ -113,7 +115,8 @@ _CONFIG_BY_AGENT = immutabledict.immutabledict({
     'crossword_oracle': crossword_agent.OracleAgentConfig,
     'grid_world_shortest_path': grid_world_agent.ShortestPathAgentConfig,
     'tic_tac_toe_minimax': tic_tac_toe_agent.MinimaxAgentConfig,
-    'api_agent': api_agent.ApiAgentConfig
+    'gpt4o_agent': gpt4o_agent.GPT4oAgentConfig, # Added agent
+    'o1mini_agent': o1mini_agent.o1MiniAgentConfig # Added agent
 })
 
 
@@ -144,10 +147,21 @@ def main(argv: Sequence[str]) -> None:
       ),
   )
 
+  # --- MODIFICATION: Initialize wandb logging ---
+  group_name = (
+    f"{experiment_config.environment.name}_{experiment_config.agent.name}"
+  )
+
+  run_name = f"demos_{experiment_config.num_demonstrations}"
+
   wandb.init(
     project="lm-act",
-    config=dataclasses.asdict(experiment_config)
+    config=dataclasses.asdict(experiment_config),
+    group=group_name,
+    name=run_name
   )
+
+  previous_episode_data = None
 
   print(f'Environment: {experiment_config.environment.name}')
   print(f'Observation type: {experiment_config.environment.observation_type}')
@@ -155,6 +169,7 @@ def main(argv: Sequence[str]) -> None:
   print(f'Num evaluation episodes: {_NUM_EVALUTION_EPISODES.value}')
 
   scores = list()
+#   all_scores = list() # For current episode data
   num_steps = list()
   num_invalid_actions = list()
   num_illegal_actions = list()
@@ -167,16 +182,26 @@ def main(argv: Sequence[str]) -> None:
         episode_num_invalid_actions,
         episode_num_illegal_actions,
         episode_num_empty_actions,
+        current_episode_data,
+        demonstration_prompt
     ) = evaluate.evaluate_episode(
         episode_idx=episode,
         config=experiment_config, 
+        previous_episode_summary=previous_episode_data
     )
 
     scores.append(episode_score)
+    # all_scores.append(current_episode_data)
+    previous_episode_data = current_episode_data
     num_steps.append(episode_num_steps)
     num_invalid_actions.append(episode_num_invalid_actions)
     num_illegal_actions.append(episode_num_illegal_actions)
     num_empty_actions.append(episode_num_empty_actions)
+
+    if episode == 1 or (episode + 1) % 50 == 0 or episode == experiment_config.num_evaluation_episodes - 1:
+        print(f"\n--- DEMONSTRATION PROMPT (End of Episode {episode}) ---")
+        print(demonstration_prompt)
+        print(f"--- END DEMONSTRATION PROMPT (End of Episode {episode}) ---\n")
 
     wandb.log({
         'episode': episode,
@@ -198,6 +223,7 @@ def main(argv: Sequence[str]) -> None:
 
   wandb.finish()
 
+  # --- END MODIFICATION ---
 
 if __name__ == '__main__':
   app.run(main)

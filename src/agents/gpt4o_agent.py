@@ -1,5 +1,3 @@
-# In src/agents/api_agent.py
-
 import os
 import dataclasses
 import re
@@ -12,22 +10,16 @@ from lm_act.src import config as config_lib
 from lm_act.src import interfaces
 
 @dataclasses.dataclass(frozen=True, kw_only=True)
-class ApiAgentConfig(config_lib.Agent):
-  name: str = 'api_agent'
-  model_name: str = 'google/gemini-2.5-flash-lite-preview-09-2025' # Or other model
+class GPT4oAgentConfig(config_lib.Agent):
+  name: str = 'gpt4o_agent'
+  model_name: str = 'gpt-4o' 
 
-class ApiAgent(interfaces.Agent):
+class GPT4oAgent(interfaces.Agent):
   """An agent that calls an external LLM API."""
 
-  def __init__(self, config: ApiAgentConfig) -> None:
+  def __init__(self, config: GPT4oAgentConfig) -> None:
     self.client = openai.OpenAI(
-        base_url="https://openrouter.ai/api/v1",
-        api_key=os.environ.get("OPENROUTER_API_KEY"),
-        default_headers={
-            # Recommended by OpenRouter to identify the app
-            "HTTP-Referer": "https://github.com/google-deepmind/lm_act", 
-            "X-Title": "LMAct Benchmark",
-        },
+        api_key=os.getenv("OPENAI_API_KEY")
     )
     self.model_name = config.model_name
 
@@ -51,7 +43,6 @@ class ApiAgent(interfaces.Agent):
       
       action = response.choices[0].message.content.strip()
       
-      # Post-process the output to find the "Action:" keyword
       if 'Action:' in action:
           action = action.split('Action:')[1].strip()
           
