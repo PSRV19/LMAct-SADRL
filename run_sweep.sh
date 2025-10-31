@@ -4,11 +4,11 @@
 # Set the parameters for your experiment sweep
 ENVIRONMENT="tic_tac_toe"
 OBS_TYPE="txt"
-AGENT="o1mini_agent"
-MODEL="o1-mini"
+AGENT="gpt4o_agent"
+MODEL="gpt-4o"
 
 # List of demonstration numbers to run (matches the paper's log scale)
-DEMONSTRATIONS=(0 2 4 8 16 32 64 128 256)
+DEMONSTRATIONS=(8 16 32 64 128 256)
 
 # --- Run Loop ---
 echo "Starting experiment sweep for $MODEL on $ENVIRONMENT"

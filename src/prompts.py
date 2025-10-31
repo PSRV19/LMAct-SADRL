@@ -16,13 +16,14 @@
 """Builds the prompts for the experiment."""
 
 from lm_act.src import config as config_lib
+from typing import Any
 
 
 def build_demonstration_prompt(
-    demonstrations: str,
+    heuristic: str, # MODIFICATION: Try natural language heuristic instead of raw demonstrations
 ) -> str:
   """Returns the prompt for the demonstrations."""
-  if not demonstrations:
+  if not heuristic:
     return (
         'You are an intelligent agent operating in a dynamic environment. Based'
         ' on the series of observations provided, you need to determine the'
@@ -32,13 +33,75 @@ def build_demonstration_prompt(
         ' action.\n\n'
     )
 
-  return (
-      'You are a powerful reinforcement learning agent. You can effectively'
-      ' identify a policy exposed by demonstrations and reproduce it in a new'
-      ' situation.\n\nHere are a number of'
-      f' demonstrations:\n\n{demonstrations}\n'
+  return ( # MODIFICATION: New prompt format for heuristic
+      'You are a powerful reinforcement learning agent. You must follow the'
+      ' policy heuristic provided to you to solve the task. The heuristic was'
+      ' distilled from expert behavior, and you should use it as your primary'
+      ' guide.\n\nHere is the expert policy heuristic:\n'
+      f'--- HEURISTIC START ---\n{heuristic}\n--- HEURISTIC END ---\n\n'
   )
 
+def _format_raw_trajectory(  # NEW HELPER FUNCTION
+    config: config_lib.Experiment,
+    observations: list[Any],
+    actions: list[Any],
+    demo_idx: int,
+) -> tuple[str, dict[str, Any]]:
+  """Formats a single raw trajectory into a string for heuristic generation."""
+  content_by_tag = dict()
+  demo_prompts = list()
+  for step_idx, (observation, action) in enumerate(zip(observations, actions)):
+    match config.environment.observation_type:
+      case 'fen' | 'coords':
+        demo_prompt = f'Observation: {observation} '
+      case 'dict':
+        demo_prompt = f'Observation: {observation}\n'
+      case 'pgn' | 'txt':
+        demo_prompt = f'Observation:\n{observation}\n'
+      case 'rgb' | 'png':
+        # The heuristic generator does not support images
+        # We will just use a placeholder
+        tag = f'<IMG_{demo_idx}_{step_idx}>'
+        demo_prompt = f'Observation: {tag} '
+      case _:
+        raise ValueError(
+            'Unsupported observation type:'
+            f' {config.environment.observation_type}'
+        )
+
+    demo_prompt += f'Action: {action}'
+    demo_prompts.append(demo_prompt.strip())
+    demo_prompts.append('\n')
+  return ''.join(demo_prompts), content_by_tag
+
+
+def build_heuristic_prompt(  # NEW FUNCTION
+    game_name: str,
+    formatted_trajectories: list[str],
+) -> str:
+  """Returns the prompt for generating a policy heuristic (Experiment 1)."""
+
+  trajectories_str = '\n\n'.join(formatted_trajectories)
+
+  return (
+      'You are an expert AI policy analyst. Your goal is to observe'
+      ' "trajectories" (sequences of observations and actions) from an'
+      ' expert agent playing a game.\n\n'
+      'Your task is to reflect on the expert\'s behavior and distill its'
+      ' implicit strategy into a single, concise, and generalizable'
+      ' "policy heuristic." This heuristic should be a natural language rule'
+      ' that explains *what* the expert is trying to do, what it'
+      ' prioritizes, and how it achieves its goals.\n\n'
+      '- **Analyze:** Look at the full trajectory. What patterns do you see?\n'
+      '- **Identify:** Focus on critical moments. What does the expert consistently prioritize (e.g., safety, offense, resource gathering)?\n'
+      '- **Formulate:** Summarize this policy as a simple rule or "heuristic."\n\n'
+      f'--- GAME ---\n{game_name}\n\n'
+      f'--- EXPERT TRAJECTORIES ---\n{trajectories_str}\n\n'
+      '--- TASK ---\n'
+      'Based *only* on the trajectories provided, what is the expert\'s'
+      ' distilled heuristic? Provide *only* the heuristic, with no preamble.'
+      '\n\nDistilled Heuristic:'
+  )
 
 def build_trajectory_prompt(
     trajectory: str,
@@ -56,7 +119,7 @@ def build_trajectory_prompt(
 
   prompt += '\nGiven the '
   if 0 < config.num_demonstrations:
-    prompt += 'demonstrations and the '
+    prompt += 'policy heuristic and the ' # MODIFIED: changed demonstrations to policy heuristic in wording
   prompt += 'current trajectory, you should infer the next logical action.'
 
   if config.prompt.show_legal_actions:
