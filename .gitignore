@@ -22,3 +22,14 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+
+# WANDB logs and metadata
+wandb/
+*.wandb
+*.log
+wandb/latest-run
+
+# Ignore other repos and data 
+data/
+Stockfish/
+run_sweep.sh
