@@ -122,56 +122,10 @@ def _create_demonstration_prompt(
     config: config_lib.Experiment,
     demo_observations: list[list[Any]],
     demo_actions: list[list[Any]],
-    previous_episode_summary: dict | None = None, # Keep track of previous episode trajectory
 ) -> tuple[str, dict[str, Any]]:
   """Returns the demonstration prompt and content for the given config."""
   content_by_tag = dict()
   demo_prompts = list()
-
-  # --- MODIFICATION: Added previous episode summary ---
-  previous_summary_text = ""
-  if previous_episode_summary:
-      previous_summary_text += "--- Summary of Previous Episode ---\n"
-      prev_score = previous_episode_summary['final_score']
-      previous_summary_text += f"Final Score: {prev_score}\n"
-      
-      prev_obs = previous_episode_summary['observations']
-      prev_act = previous_episode_summary['actions']
-      prev_rew = previous_episode_summary['rewards']
-      
-      num_prev_steps = len(prev_obs) # Total number of observations (steps + initial state)
-
-      # Ensure there are enough steps to have distinct first, middle, last
-      if num_prev_steps > 1:
-          # First step
-          first_obs = prev_obs[0]
-          first_act = prev_act[1] if num_prev_steps > 1 else None
-          first_rew = prev_rew[1] if num_prev_steps > 1 else None
-          previous_summary_text += (
-              f"Initial Step: Obs: {first_obs}, Act: {first_act}, Rew: {first_rew}\n"
-          )
-
-          # Middle step
-          middle_idx = num_prev_steps // 2
-          if middle_idx > 0 and middle_idx < num_prev_steps: # Ensure middle_idx is valid
-              middle_obs = prev_obs[middle_idx]
-              # Action and Reward indices are middle_idx + 1 if they exist
-              middle_act = prev_act[middle_idx + 1] if middle_idx + 1 < len(prev_act) else None
-              middle_rew = prev_rew[middle_idx + 1] if middle_idx + 1 < len(prev_rew) else None
-              previous_summary_text += (
-                  f"Middle Step (approx. step {middle_idx}): Obs: {middle_obs}, Act: {middle_act}, Rew: {middle_rew}\n"
-              )
-
-          # Last step
-          last_obs = prev_obs[-1]
-          last_act = prev_act[-1] # Last action taken
-          last_rew = prev_rew[-1] # Last reward received
-          previous_summary_text += (
-              f"Final Step: Obs: {last_obs}, Act: {last_act}, Rew: {last_rew}\n"
-          )
-              
-      previous_summary_text += "--- End Previous Summary ---\n\n"
-  # --- END MODIFICATION ---
 
   for demo_idx, (observations, actions) in enumerate(
       zip(demo_observations, demo_actions)
@@ -205,11 +159,8 @@ def _create_demonstration_prompt(
       demonstrations=''.join(demo_prompts),
   )
 
-  final_prompt_string = previous_summary_text + demonstration_prompt
-  logging.info('Final demonstration prompt with previous summary: %s', final_prompt_string)
-
-  # logging.info('Demonstration prompt: %s', demonstration_prompt)
-  return final_prompt_string, content_by_tag
+  logging.info('Demonstration prompt: %s', demonstration_prompt)
+  return demonstration_prompt, content_by_tag
 
 
 def _create_trajectory_prompt(
@@ -226,7 +177,6 @@ def _create_trajectory_prompt(
   # The first action is a dummy action so we place it at the end of the list.
   actions = np.roll(copy.deepcopy(actions), -1)
 
-  # --- MODIFICATION: Include rewards in trajectory prompt ---
   for step_idx, current_obs in enumerate(observations):
     match config.environment.observation_type:
       case 'fen' | 'coords':
@@ -249,13 +199,8 @@ def _create_trajectory_prompt(
       if config.prompt.include_past_actions and prev_action is not None:
           step_prompt += f'Action: {prev_action} '
 
-      # Add the immediate reward received at this step
-      if current_reward is not None:
-          step_prompt += f'Reward: {current_reward}'
-
     trajectory_prompts.append(step_prompt)
     trajectory_prompts.append('\n')
-    # --- END MODIFICATION ---
 
   trajectory_prompt = prompts.build_trajectory_prompt(
       config=config,
@@ -332,8 +277,7 @@ def evaluate_episode_replay(
 
 def evaluate_episode(
     episode_idx: int,
-    config: config_lib.Experiment,
-    previous_episode_summary: dict | None = None, # MODIFICATION: Keep track of previous episode trajectory
+    config: config_lib.Experiment
 ) -> tuple[float, int, int, int, int, dict, str]:
   """Evaluates a single episode."""
 
@@ -357,8 +301,7 @@ def evaluate_episode(
       _create_demonstration_prompt(
           config=config,
           demo_observations=demo_observations,
-          demo_actions=demo_actions,
-          previous_episode_summary=previous_episode_summary, # MODIFICATION: Pass previous episode trajectory
+          demo_actions=demo_actions
       )
   )
 
