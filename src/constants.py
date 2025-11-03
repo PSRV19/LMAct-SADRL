@@ -23,7 +23,8 @@ from lm_act.src.agents import crossword as crossword_agents
 from lm_act.src.agents import grid_world as grid_world_agents
 from lm_act.src.agents import random as random_agents
 from lm_act.src.agents import tic_tac_toe as tic_tac_toe_agents
-from lm_act.src.agents import api_agent as api_agents
+from lm_act.src.agents import gpt4o_agent as gpt4o_agents
+from lm_act.src.agents import o1mini_agent as o1mini_agents
 from lm_act.src.environments import chess as chess_env
 from lm_act.src.environments import crossword as crossword_env
 from lm_act.src.environments import dm_control as dm_control_env
@@ -61,8 +62,10 @@ def get_agent_builder(agent_name: str) -> type[Agent]:
       return grid_world_agents.ShortestPathAgent
     case 'tic_tac_toe_minimax':
       return tic_tac_toe_agents.MinimaxAgent
-    case 'api_agent':
-      return api_agents.ApiAgent
+    case 'gpt4o_agent':
+      return gpt4o_agents.GPT4oAgent # Added agent
+    case 'o1mini_agent':
+      return o1mini_agents.o1MiniAgent # Added agent
     case _:
       raise ValueError(f'Unknown agent name: {agent_name}.')
 

@@ -18,7 +18,7 @@
 import copy
 import os
 import pathlib
-from typing import Any
+from typing import Any, List
 
 from absl import logging
 import numpy as np
@@ -27,6 +27,8 @@ from lm_act.src import bagz
 from lm_act.src import config as config_lib
 from lm_act.src import constants
 from lm_act.src import prompts
+from lm_act.src import interfaces
+from lm_act.src.agents import gpt4o_agent
 
 
 _BASE_DIR_PATH = pathlib.Path(
@@ -117,48 +119,100 @@ def _load_demonstrations_and_opening_path(
 
   return demo_observations, demo_actions, base_dir_path / opening_name
 
-
-def _create_demonstration_prompt(
+def _generate_contrastive_heuristics(  # NEW FUNCTION
     config: config_lib.Experiment,
     demo_observations: list[list[Any]],
     demo_actions: list[list[Any]],
-) -> tuple[str, dict[str, Any]]:
-  """Returns the demonstration prompt and content for the given config."""
-  content_by_tag = dict()
-  demo_prompts = list()
+    agent_for_heuristics: interfaces.Agent,
+    rng: np.random.Generator,
+) -> List[str]:
+  """Generates a list of contrastive heuristics from raw demo steps."""
+  if config.num_demonstrations == 0:
+    return []  # No heuristics for zero-shot
 
+  # Create a pool of all available (obs, act) steps from all demos
+  all_steps_pool = []
   for demo_idx, (observations, actions) in enumerate(
       zip(demo_observations, demo_actions)
   ):
     for step_idx, (observation, action) in enumerate(
         zip(observations, actions)
     ):
-      match config.environment.observation_type:
-        case 'fen' | 'coords':
-          demo_prompt = f'Observation: {observation} '
-        case 'dict':
-          demo_prompt = f'Observation: {observation}\n'
-        case 'pgn' | 'txt':
-          demo_prompt = f'Observation:\n{observation}\n'
-        case 'rgb' | 'png':
-          tag = f'<IMG_{demo_idx}_{step_idx}>'
-          content_by_tag[tag] = observation
-          demo_prompt = f'Observation: {tag} '
-        case _:
-          raise ValueError(
-              'Unsupported observation type:'
-              f' {config.environment.observation_type}'
-          )
+      # Store all info needed to reconstruct the step
+      all_steps_pool.append(
+          (demo_idx, step_idx, observation, action)
+      )
 
-      demo_prompt += f'Action: {action}'
-      demo_prompts.append(demo_prompt)
-      demo_prompts.append('\n')
-    demo_prompts.append('\n')
+  logging.info(f"Created a pool of {len(all_steps_pool)} total steps from {len(demo_observations)} demos.")
 
-  demonstration_prompt = prompts.build_demonstration_prompt(
-      demonstrations=''.join(demo_prompts),
+  # Randomly shuffle the pool using the episode's RNG for reproducibility
+  rng.shuffle(all_steps_pool)
+
+  # Select N steps, where N is config.num_demonstrations
+  # Ensure we don't try to get more steps than we have.
+  num_examples_to_generate = min(
+      config.num_demonstrations, 
+      len(all_steps_pool)
   )
-  logging.info('Demonstration prompt: %s', demonstration_prompt)
+  
+  selected_steps = all_steps_pool[:num_examples_to_generate]
+  
+  logging.info(f"Randomly selected {num_examples_to_generate} steps to generate heuristics.")
+
+  generated_heuristics = []
+  
+  # Iterate exactly N times over the *selected* steps
+  for example_index, (demo_idx, step_idx, observation, action) in enumerate(selected_steps, start=1):
+    
+    # Format the single observation
+    formatted_obs_str, content_by_tag = prompts._format_raw_observation(
+        config=config,
+        observation=observation,
+        demo_idx=demo_idx,
+        step_idx=step_idx,
+    )
+
+    # Build the contrastive-generation prompt
+    heuristic_prompt = prompts.build_contrastive_prompt(
+        game_name=config.environment.name,
+        formatted_observation=formatted_obs_str,
+        expert_action=action,
+        example_index=example_index,
+    )
+
+    # Call the LLM to generate the grounded heuristic
+    logging.info(f'Generating contrastive heuristic {example_index}/{num_examples_to_generate}...')
+    try:
+      grounded_heuristic_str = agent_for_heuristics.step(
+          observation={
+              'prompt': heuristic_prompt,
+              'prompt_data': content_by_tag,
+          },
+          environment=None,
+          rng=rng,
+      )
+      generated_heuristics.append(grounded_heuristic_str)
+    except Exception as e:
+      logging.error(f"API call failed for example {example_index}: {e}")
+      pass
+      
+  logging.info(f'Successfully generated {len(generated_heuristics)} contrastive examples.')
+  return generated_heuristics
+
+
+def _create_demonstration_prompt(
+    config: config_lib.Experiment,
+    heuristics_list: List[str],  # MODIFICATION: Takes list of heuristics
+) -> tuple[str, dict[str, Any]]:
+  """Returns the demonstration prompt and content for the given config."""
+  content_by_tag = dict()
+
+  # MODIFICATION: All demo formatting is gone. We just pass the list.
+  demonstration_prompt = prompts.build_demonstration_prompt(
+      heuristics_list=heuristics_list,
+  )
+
+  logging.info('Demonstration prompt with contrastive examples: %s', demonstration_prompt)
   return demonstration_prompt, content_by_tag
 
 
@@ -274,7 +328,7 @@ def evaluate_episode_replay(
 def evaluate_episode(
     episode_idx: int,
     config: config_lib.Experiment,
-) -> tuple[float, int, int, int, int]:
+) -> tuple[float, int, int, int, int, str]:
   """Evaluates a single episode."""
 
   # Every episode has to initialize the RNG with a different seed.
@@ -292,12 +346,32 @@ def evaluate_episode(
       'Evaluating episode %d with opening %s.', episode_idx, opening_path
   )
 
+  # MODIFICATION: New heuristic generation step
+  heuristics_list = []
+  if config.num_demonstrations > 0:
+    logging.info('Setting up heuristic-generating agent (gpt-4o).')
+    heuristic_agent_config = gpt4o_agent.GPT4oAgentConfig(
+        model_name='gpt-4o'
+    )
+    heuristic_agent = gpt4o_agent.GPT4oAgent(config=heuristic_agent_config)
+
+    # Call the new function
+    heuristics_list = _generate_contrastive_heuristics(
+        config=config,
+        demo_observations=demo_observations,
+        demo_actions=demo_actions,
+        agent_for_heuristics=heuristic_agent,
+        rng=rng,
+    )
+  # END MODIFICATION
+
+  print(f"Heuristics list: {heuristics_list}\n")
+  
   logging.info('Creating the demonstration chunks.')
   demonstration_prompt, demonstration_prompt_data = (
       _create_demonstration_prompt(
           config=config,
-          demo_observations=demo_observations,
-          demo_actions=demo_actions,
+          heuristics_list=heuristics_list
       )
   )
 
@@ -392,4 +466,5 @@ def evaluate_episode(
       num_invalid_actions,
       num_illegal_actions,
       num_empty_actions,
+      demonstration_prompt
   )

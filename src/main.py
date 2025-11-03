@@ -34,7 +34,8 @@ from lm_act.src.agents import crossword as crossword_agent
 from lm_act.src.agents import grid_world as grid_world_agent
 from lm_act.src.agents import random as random_agent
 from lm_act.src.agents import tic_tac_toe as tic_tac_toe_agent
-from lm_act.src.agents import api_agent as api_agent
+from lm_act.src.agents import gpt4o_agent as gpt4o_agent
+from lm_act.src.agents import o1mini_agent as o1mini_agent
 from lm_act.src.environments import chess
 from lm_act.src.environments import crossword
 from lm_act.src.environments import dm_control
@@ -75,7 +76,8 @@ _AGENT = flags.DEFINE_enum(
         'crossword_oracle',
         'grid_world_shortest_path',
         'tic_tac_toe_minimax',
-        'api_agent',
+        'gpt4o_agent',
+        'o1mini_agent',
     ],
     help='The agent to evaluate.',
 )
@@ -100,6 +102,14 @@ _MODEL_NAME = flags.DEFINE_string(
     help='The name of the model to use for API agents.'
 )
 
+# --- NEW FLAG ---
+_RUN_NAME_PREFIX = flags.DEFINE_string(
+    name='run_name_prefix',
+    default='demos_',
+    help='The prefix for the wandb run name.'
+)
+# --- END NEW FLAG ---
+
 _CONFIG_BY_ENVIRONMENT = immutabledict.immutabledict({
     'chess': chess.EnvironmentConfig,
     'crossword': crossword.EnvironmentConfig,
@@ -113,7 +123,8 @@ _CONFIG_BY_AGENT = immutabledict.immutabledict({
     'crossword_oracle': crossword_agent.OracleAgentConfig,
     'grid_world_shortest_path': grid_world_agent.ShortestPathAgentConfig,
     'tic_tac_toe_minimax': tic_tac_toe_agent.MinimaxAgentConfig,
-    'api_agent': api_agent.ApiAgentConfig
+    'gpt4o_agent': gpt4o_agent.GPT4oAgentConfig, # Added agent
+    'o1mini_agent': o1mini_agent.o1MiniAgentConfig # Added agent
 })
 
 
@@ -144,9 +155,21 @@ def main(argv: Sequence[str]) -> None:
       ),
   )
 
+  # MODIFICATION: Initialize wandb logging
+  group_name = (
+    f"{experiment_config.environment.name}_{experiment_config.agent.name}"
+  )
+
+  # MODIFICATION: Use the new flag for the run name
+  run_name = (
+    f"{_RUN_NAME_PREFIX.value}{experiment_config.num_demonstrations}"
+  )
+
   wandb.init(
     project="lm-act",
-    config=dataclasses.asdict(experiment_config)
+    config=dataclasses.asdict(experiment_config),
+    group=group_name,
+    name=run_name  
   )
 
   print(f'Environment: {experiment_config.environment.name}')
@@ -155,6 +178,7 @@ def main(argv: Sequence[str]) -> None:
   print(f'Num evaluation episodes: {_NUM_EVALUTION_EPISODES.value}')
 
   scores = list()
+#   all_scores = list() # For current episode data
   num_steps = list()
   num_invalid_actions = list()
   num_illegal_actions = list()
@@ -167,16 +191,23 @@ def main(argv: Sequence[str]) -> None:
         episode_num_invalid_actions,
         episode_num_illegal_actions,
         episode_num_empty_actions,
+        demonstration_prompt
     ) = evaluate.evaluate_episode(
         episode_idx=episode,
         config=experiment_config, 
     )
 
     scores.append(episode_score)
+    # all_scores.append(current_episode_data)
     num_steps.append(episode_num_steps)
     num_invalid_actions.append(episode_num_invalid_actions)
     num_illegal_actions.append(episode_num_illegal_actions)
     num_empty_actions.append(episode_num_empty_actions)
+
+    if episode == 1 or (episode + 1) % 50 == 0 or episode == experiment_config.num_evaluation_episodes - 1:
+        print(f"\n--- DEMONSTRATION PROMPT (End of Episode {episode}) ---")
+        print(demonstration_prompt)
+        print(f"--- END DEMONSTRATION PROMPT (End of Episode {episode}) ---\n")
 
     wandb.log({
         'episode': episode,
@@ -197,7 +228,6 @@ def main(argv: Sequence[str]) -> None:
   print('Run complete. View results on Weights & Biases.')
 
   wandb.finish()
-
 
 if __name__ == '__main__':
   app.run(main)
