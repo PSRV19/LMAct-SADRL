@@ -102,6 +102,18 @@ _MODEL_NAME = flags.DEFINE_string(
     help='The name of the model to use for API agents.'
 )
 
+_WANDB_PROJECT = flags.DEFINE_string(
+    name='wandb_project',
+    default='lm-act',
+    help='The Weights & Biases project name to log to.'
+)
+
+_RUN_NAME_PREFIX = flags.DEFINE_string(
+    name='run_name_prefix',
+    default='demos_',
+    help='The prefix for the wandb run name.'
+)
+
 _CONFIG_BY_ENVIRONMENT = immutabledict.immutabledict({
     'chess': chess.EnvironmentConfig,
     'crossword': crossword.EnvironmentConfig,
@@ -152,16 +164,16 @@ def main(argv: Sequence[str]) -> None:
     f"{experiment_config.environment.name}_{experiment_config.agent.name}"
   )
 
-  run_name = f"demos_{experiment_config.num_demonstrations}"
+  run_name = (
+    f"{_RUN_NAME_PREFIX.value}{experiment_config.num_demonstrations}"
+  )
 
   wandb.init(
-    project="lm-act",
+    project=_WANDB_PROJECT.value,  # <-- THIS IS THE CRITICAL FIX
     config=dataclasses.asdict(experiment_config),
     group=group_name,
     name=run_name
   )
-
-  previous_episode_data = None
 
   print(f'Environment: {experiment_config.environment.name}')
   print(f'Observation type: {experiment_config.environment.observation_type}')
@@ -187,12 +199,10 @@ def main(argv: Sequence[str]) -> None:
     ) = evaluate.evaluate_episode(
         episode_idx=episode,
         config=experiment_config, 
-        previous_episode_summary=previous_episode_data
     )
 
     scores.append(episode_score)
     # all_scores.append(current_episode_data)
-    previous_episode_data = current_episode_data
     num_steps.append(episode_num_steps)
     num_invalid_actions.append(episode_num_invalid_actions)
     num_illegal_actions.append(episode_num_illegal_actions)
