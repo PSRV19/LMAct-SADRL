@@ -88,11 +88,11 @@ class GridWorld(interfaces.Environment):
     self._walls[:, 0] = True
     self._walls[:, -1] = True
 
-    with open(_ASSETS_PATH / 'food.png', 'r') as f:
+    with open(_ASSETS_PATH / 'food.png', 'rb') as f:
       target_sprite = imageio.imread(f)[:, :, :-1]
-    with open(_ASSETS_PATH / 'player.png', 'r') as f:
+    with open(_ASSETS_PATH / 'player.png', 'rb') as f:
       player_sprite = imageio.imread(f)[:, :, :-1]
-    with open(_ASSETS_PATH / 'stone.png', 'r') as f:
+    with open(_ASSETS_PATH / 'stone.png', 'rb') as f:
       wall_sprite = imageio.imread(f)
 
     sprite_matrix = np.array([wall_sprite, target_sprite, player_sprite])
