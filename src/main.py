@@ -119,6 +119,12 @@ _CONFIG_BY_AGENT = immutabledict.immutabledict({
     'o1mini_agent': o1mini_agent.o1MiniAgentConfig # Added agent
 })
 
+_WANDB_PROJECT = flags.DEFINE_string(
+    name='wandb_project',
+    default='lm-act', # Default project if flag isn't provided
+    help='The Weights & Biases project name to log to.'
+)
+
 # --- NEW FLAG ---
 _RUN_NAME_PREFIX = flags.DEFINE_string(
     name='run_name_prefix',
@@ -165,13 +171,11 @@ def main(argv: Sequence[str]) -> None:
   )
 
   wandb.init(
-    project="lm-act",
+    project=_WANDB_PROJECT.value,
     config=dataclasses.asdict(experiment_config),
     group=group_name,
     name=run_name
   )
-
-  previous_episode_data = None
 
   print(f'Environment: {experiment_config.environment.name}')
   print(f'Observation type: {experiment_config.environment.observation_type}')
