@@ -36,12 +36,24 @@ _BASE_DIR_PATH = pathlib.Path(
     )
 )
 
+# --- NEW HELPER FOR STRATIFIED SAMPLING ---
+def _get_game_phase(demo_length: int, max_steps: int) -> str:
+    """Categorizes a demo based on its length."""
+    ratio = demo_length / max_steps
+    if ratio < 0.33:  # Shorter games are "Opening"
+        return "end"
+    elif ratio < 0.66: # Medium games are "Mid-Game"
+        return "mid"
+    else: # Longer games are "End-Game"
+        return "opening"
+
 
 def _load_demonstrations_and_opening_path(
     rng: np.random.Generator,
     config: config_lib.Experiment,
 ) -> tuple[list[list[Any]], list[list[Any]], pathlib.Path]:
   """Loads the demonstrations (observations & actions) and the opening path.
+     Modified to load demonstrations in order for horizon-curriculum learning. 
 
   Args:
     rng: The random number generator.
@@ -56,67 +68,164 @@ def _load_demonstrations_and_opening_path(
     ValueError: If there are insufficient demonstrations in the directory.
   """
   base_dir_path = _BASE_DIR_PATH / config.environment.name
-  demonstration_names = [
+  all_demo_names = [
       file_name
       for file_name in os.listdir(base_dir_path)
       if file_name.startswith('demonstration')
   ]
-  if len(demonstration_names) < config.num_demonstrations + 1:
-    raise ValueError(
-        f'Insufficient demonstrations in {base_dir_path}: Need at least'
-        f' {config.num_demonstrations + 1} but only found'
-        f' {len(demonstration_names)}.'
-    )
 
-  if config.replay_episode:
-    assert config.num_demonstrations == 1
-    num_openings = config.num_demonstrations
-  else:
-    # We need to add 1 to account for the opening that that will be evaluated.
-    num_openings = config.num_demonstrations + 1
-  demonstration_names = rng.choice(
-      demonstration_names,
-      size=num_openings,
-      replace=False,
-      shuffle=False,
-  )
-  opening_name = demonstration_names[-1]
-  demonstration_names = demonstration_names[: config.num_demonstrations]
-
-  demo_observations = list()
-  demo_actions = list()
-
+  if not all_demo_names:
+    raise ValueError(f'No demonstrations found in {base_dir_path}.')
+  
+  # Select one demo to be the evaluation opening and remove it from the pool 
+  eval_opening_idx = rng.choice(len(all_demo_names))
+  eval_opening_name = all_demo_names.pop(eval_opening_idx)
+  opening_path = base_dir_path / eval_opening_name
+  logging.info(f"Selected {eval_opening_name} for evaluation.")
+  
+  if config.num_demonstrations == 0:
+    # Zero-shot, no demos needed.
+    return [], [], opening_path
+  
+  # Define decoder functions (as before)
   match config.environment.observation_type:
     case 'rgb':
       rgb_shape = constants.get_rgb_shape(config.environment.name)
-      observation_decode_fn = lambda x: np.frombuffer(
-          x,
-          dtype=np.uint8,
-      ).reshape(rgb_shape)
+      observation_decode_fn = lambda x: np.frombuffer(x, dtype=np.uint8).reshape(rgb_shape)
     case 'png':
-      # PNG data does not need to be decoded.
       observation_decode_fn = lambda x: x
     case _:
       observation_decode_fn = lambda x: x.decode('utf-8')
   action_decode_fn = lambda x: x.decode('utf-8')
 
-  for demonstration_name in demonstration_names:
+  # Load ALL remaining demos into memory and categorize them
+  # NOTE: This assumes a max game length, and only works for tic_tac_toe for initial experimentation.
+
+  if config.environment.name == 'tic_tac_toe':
+    MAX_GAME_STEPS = 9
+  else:
+    # As a fallback, we'll just find the max length in the dataset
+    # This is less ideal than a true game-defined max.
+    all_lengths = []
+    for demonstration_name in all_demo_names:
+        actions_path = base_dir_path / demonstration_name / f'actions_{config.environment.action_type}.bag'
+        all_lengths.append(len(bagz.BagReader(actions_path.as_posix())))
+    MAX_GAME_STEPS = max(all_lengths) if all_lengths else 100
+    logging.warning(f"No max steps for {config.environment.name}, defaulting to {MAX_GAME_STEPS}")
+
+  
+  categorized_demos = {"opening": [], "mid": [], "end": []}
+  
+  for demonstration_name in all_demo_names:
     demo_dir_path = base_dir_path / demonstration_name
-    observations_path = (
-        demo_dir_path
-        / f'observations_{config.environment.observation_type}.bag'
-    )
-    actions_path = (
-        demo_dir_path / f'actions_{config.environment.action_type}.bag'
-    )
-    observations = bagz.BagReader(observations_path.as_posix())
-    actions = bagz.BagReader(actions_path.as_posix())
-    assert len(observations) == len(actions) 
-    demo_observations.append(list(map(observation_decode_fn, observations)))
-    demo_actions.append(list(map(action_decode_fn, actions)))
+    observations_path = demo_dir_path / f'observations_{config.environment.observation_type}.bag'
+    actions_path = demo_dir_path / f'actions_{config.environment.action_type}.bag'
+    
+    observations = list(map(observation_decode_fn, bagz.BagReader(observations_path.as_posix())))
+    actions = list(map(action_decode_fn, bagz.BagReader(actions_path.as_posix())))
+    
+    if not observations or not actions or len(observations) != len(actions):
+        logging.warning(f"Skipping malformed demo: {demonstration_name}")
+        continue
+        
+    demo_length = len(actions)
+    phase = _get_game_phase(demo_length, MAX_GAME_STEPS)
+    categorized_demos[phase].append((observations, actions))
 
-  return demo_observations, demo_actions, base_dir_path / opening_name
+  logging.info(
+      f"Categorized all demos: {len(categorized_demos['opening'])} open, "
+      f"{len(categorized_demos['mid'])} mid, {len(categorized_demos['end'])} end."
+  )
 
+  # Shuffle each bucket
+  for phase in categorized_demos:
+    rng.shuffle(categorized_demos[phase])
+
+  # Perform Stratified Sampling (Round-Robin) ---
+  selected_demos = []
+  num_to_sample = config.num_demonstrations
+  
+  # Use round-robin sampling, prioritizing extremes (open -> end -> mid)
+  # This ensures a good spread even for very small N
+  sample_order = ["opening", "end", "mid"]
+  
+  while len(selected_demos) < num_to_sample:
+    something_added = False
+    for phase in sample_order:
+      if categorized_demos[phase]:
+        selected_demos.append(categorized_demos[phase].pop())
+        something_added = True
+        if len(selected_demos) == num_to_sample:
+          break
+    if not something_added or len(selected_demos) == num_to_sample:
+      # Stop if we've hit our target or if all lists are empty
+      break
+
+  logging.info(f"Selected {len(selected_demos)} demos via stratified sampling.")
+
+  # Split back into two lists ---
+  demo_observations = [demo[0] for demo in selected_demos]
+  demo_actions = [demo[1] for demo in selected_demos]
+
+  return demo_observations, demo_actions, opening_path
+
+  # if len(demonstration_names) < config.num_demonstrations + 1:
+  #   raise ValueError(
+  #       f'Insufficient demonstrations in {base_dir_path}: Need at least'
+  #       f' {config.num_demonstrations + 1} but only found'
+  #       f' {len(demonstration_names)}.'
+  #   )
+
+  # if config.replay_episode:
+  #   assert config.num_demonstrations == 1
+  #   num_openings = config.num_demonstrations
+  # else:
+  #   # We need to add 1 to account for the opening that that will be evaluated.
+  #   num_openings = config.num_demonstrations + 1
+  # demonstration_names = rng.choice(
+  #     demonstration_names,
+  #     size=num_openings,
+  #     replace=False,
+  #     shuffle=False,
+  # )
+  # opening_name = demonstration_names[-1]
+  # demonstration_names = demonstration_names[: config.num_demonstrations]
+
+  # demo_observations = list()
+  # demo_actions = list()
+
+  # match config.environment.observation_type:
+  #   case 'rgb':
+  #     rgb_shape = constants.get_rgb_shape(config.environment.name)
+  #     observation_decode_fn = lambda x: np.frombuffer(
+  #         x,
+  #         dtype=np.uint8,
+  #     ).reshape(rgb_shape)
+  #   case 'png':
+  #     # PNG data does not need to be decoded.
+  #     observation_decode_fn = lambda x: x
+  #   case _:
+  #     observation_decode_fn = lambda x: x.decode('utf-8')
+  # action_decode_fn = lambda x: x.decode('utf-8')
+
+  # for demonstration_name in demonstration_names:
+  #   demo_dir_path = base_dir_path / demonstration_name
+  #   observations_path = (
+  #       demo_dir_path
+  #       / f'observations_{config.environment.observation_type}.bag'
+  #   )
+  #   actions_path = (
+  #       demo_dir_path / f'actions_{config.environment.action_type}.bag'
+  #   )
+  #   observations = bagz.BagReader(observations_path.as_posix())
+  #   actions = bagz.BagReader(actions_path.as_posix())
+  #   assert len(observations) == len(actions) 
+  #   demo_observations.append(list(map(observation_decode_fn, observations)))
+  #   demo_actions.append(list(map(action_decode_fn, actions)))
+
+  # return demo_observations, demo_actions, base_dir_path / opening_name
+
+MAX_GAME_STEPS = 9 # For Tic-Tac-Toe
 
 def _create_demonstration_prompt(
     config: config_lib.Experiment,
@@ -127,9 +236,37 @@ def _create_demonstration_prompt(
   content_by_tag = dict()
   demo_prompts = list()
 
-  for demo_idx, (observations, actions) in enumerate(
-      zip(demo_observations, demo_actions)
-  ):
+  # MODIFICATION: Sort and Label
+  
+  # Determine MAX_GAME_STEPS again for labeling
+  if config.environment.name == 'tic_tac_toe':
+    MAX_GAME_STEPS = 9
+  else:
+    # Find max length *in the sample* as a fallback
+    MAX_GAME_STEPS = max(len(o) for o in demo_observations) if demo_observations else 100
+
+  # 2. Combine, SORT, and iterate to build prompt
+  
+  demos = list(zip(demo_observations, demo_actions))
+  # Sort by length of observations (shortest to longest)
+  demos.sort(key=lambda x: len(x[0])) 
+  
+  logging.info(f"Building prompt with {len(demos)} sorted, stratified demos.")
+
+  current_phase = None
+  for demo_idx, (observations, actions) in enumerate(demos):
+    
+    demo_length = len(observations)
+    
+    # Get the label
+    phase = _get_game_phase(demo_length, MAX_GAME_STEPS)
+    
+    # Add the label only when the phase changes
+    if phase != current_phase:
+        current_phase = phase
+        demo_prompts.append(f"\n--- {current_phase.upper()}-GAME DEMOS ---\n\n")
+
+    # Format the demo as before
     for step_idx, (observation, action) in enumerate(
         zip(observations, actions)
     ):
@@ -145,21 +282,20 @@ def _create_demonstration_prompt(
           content_by_tag[tag] = observation
           demo_prompt = f'Observation: {tag} '
         case _:
-          raise ValueError(
-              'Unsupported observation type:'
-              f' {config.environment.observation_type}'
-          )
+          raise ValueError(...)
 
       demo_prompt += f'Action: {action}' 
       demo_prompts.append(demo_prompt.strip())
       demo_prompts.append('\n')
     demo_prompts.append('\n')
 
+  # END MODIFICATION
+
   demonstration_prompt = prompts.build_demonstration_prompt(
       demonstrations=''.join(demo_prompts),
   )
 
-  logging.info('Demonstration prompt: %s', demonstration_prompt)
+  logging.info('Demonstration prompt with horizon-curriculum: %s', demonstration_prompt)
   return demonstration_prompt, content_by_tag
 
 
@@ -278,7 +414,7 @@ def evaluate_episode_replay(
 def evaluate_episode(
     episode_idx: int,
     config: config_lib.Experiment
-) -> tuple[float, int, int, int, int, dict, str]:
+) -> tuple[float, int, int, int, int, str]:
   """Evaluates a single episode."""
 
   # Every episode has to initialize the RNG with a different seed.
@@ -391,19 +527,11 @@ def evaluate_episode(
   score = sum(rewards[1:])  # Skip the first reward since it is always None.
   num_steps = len(rewards) - 1
 
-  current_episode_data = {
-      'observations': observations,
-      'actions': actions,
-      'rewards': rewards,
-      'final_score': score
-  }
-
   return (
       score,
       num_steps,
       num_invalid_actions,
       num_illegal_actions,
       num_empty_actions,
-      current_episode_data,
       demonstration_prompt
   )

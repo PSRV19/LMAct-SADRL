@@ -32,13 +32,44 @@ def build_demonstration_prompt(
         ' action.\n\n'
     )
 
+  # MODIFICATION: Updated the prompt to acknowledge the demo labels
   return (
-      'You are a powerful reinforcement learning agent. You can effectively'
-      ' identify a policy exposed by demonstrations and reproduce it in a new'
-      ' situation.\n\nHere are a number of'
-      f' demonstrations:\n\n{demonstrations}\n'
-  )
+      'You are a powerful reinforcement learning agent. You will be shown a'
+      ' curriculum of expert demonstrations, categorized by game phase.'
+      ' Your goal is to learn the specific policy for each phase.\n\n'
+      '--- 1. END-GAME DEMOS ---'
+      ' (These are short, 3-5 step games)'
+      ' **Your Goal:** Learn to identify and execute *immediate, forced wins*.'
+      ' Focus on recognizing 1-move or 2-move winning patterns.'
+      ' This is your most important skill.\n\n'
 
+      '--- 2. MID-GAME DEMOS ---'
+      ' (These are medium-length, 5-7 step games)'
+      ' **Your Goal:** Learn how to *create* the winning end-game scenarios you'
+      ' learned above. Focus on blocking opponent threats and setting up'
+      ' 2-way forks or unavoidable wins.\n\n'
+
+      '--- 3. OPENING/FULL-GAME DEMOS ---'
+      ' (These are long, 8-9 step games)'
+      ' **Your Goal:** Learn the safest and most effective opening moves.'
+      ' Focus on moves that lead to the strong mid-game positions you'
+      ' have already seen.\n\n'
+      
+      'Pay attention to these labels. When you are in a new game, first'
+      ' identify the current game phase, then apply the specific policy'
+      ' you have learned for that phase.\n\n'
+      f'{demonstrations}\n'
+    )
+
+def get_game_phase_label(demo_length: int, total_steps: int) -> str:
+    """Categorizes a demo based on its length."""
+    ratio = demo_length / total_steps
+    if ratio < 0.33:
+        return "--- END-GAME DEMO ---"
+    elif ratio < 0.66:
+        return "--- MID-GAME DEMO ---"
+    else:
+        return "--- OPENING DEMO ---"
 
 def build_trajectory_prompt(
     trajectory: str,

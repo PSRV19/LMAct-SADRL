@@ -119,6 +119,14 @@ _CONFIG_BY_AGENT = immutabledict.immutabledict({
     'o1mini_agent': o1mini_agent.o1MiniAgentConfig # Added agent
 })
 
+# --- NEW FLAG ---
+_RUN_NAME_PREFIX = flags.DEFINE_string(
+    name='run_name_prefix',
+    default='demos_',
+    help='The prefix for the wandb run name.'
+)
+# --- END NEW FLAG ---
+
 
 def main(argv: Sequence[str]) -> None:
   if len(argv) > 1:
@@ -152,7 +160,9 @@ def main(argv: Sequence[str]) -> None:
     f"{experiment_config.environment.name}_{experiment_config.agent.name}"
   )
 
-  run_name = f"demos_{experiment_config.num_demonstrations}"
+  run_name = (
+    f"{_RUN_NAME_PREFIX.value}_{experiment_config.num_demonstrations}"
+  )
 
   wandb.init(
     project="lm-act",
@@ -182,17 +192,14 @@ def main(argv: Sequence[str]) -> None:
         episode_num_invalid_actions,
         episode_num_illegal_actions,
         episode_num_empty_actions,
-        current_episode_data,
         demonstration_prompt
     ) = evaluate.evaluate_episode(
         episode_idx=episode,
-        config=experiment_config, 
-        previous_episode_summary=previous_episode_data
+        config=experiment_config
     )
 
     scores.append(episode_score)
     # all_scores.append(current_episode_data)
-    previous_episode_data = current_episode_data
     num_steps.append(episode_num_steps)
     num_invalid_actions.append(episode_num_invalid_actions)
     num_illegal_actions.append(episode_num_illegal_actions)
