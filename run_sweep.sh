@@ -2,15 +2,15 @@
 
 # --- Configuration ---
 # Set the parameters for your experiment sweep
-ENVIRONMENT="grid_world"
+ENVIRONMENT="tic_tac_toe"
 OBS_TYPE="txt"
-AGENT="gpt4o_agent"
-MODEL="gpt-4o"
+AGENT="llama_agent"
+MODEL="llama3"
 
 # Set the wandb project name
-WANDB_PROJECT="lm-act-grid-world"
+WANDB_PROJECT="lm-act-tic-tac-toe"
 # Set the run name prefix
-RUN_PREFIX="basic_curriculum_grid_world_"
+RUN_PREFIX="llama_basic_sweep"
 
 # List of demonstration numbers to run
 DEMONSTRATIONS=(0 2 4 8 16 32 64 128 256)
