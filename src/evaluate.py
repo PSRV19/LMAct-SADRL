@@ -101,18 +101,22 @@ def _load_demonstrations_and_opening_path(
   # Load ALL remaining demos into memory and categorize them
   # NOTE: This assumes a max game length, and only works for tic_tac_toe for initial experimentation.
 
-  if config.environment.name == 'tic_tac_toe':
-    MAX_GAME_STEPS = 9
-  else:
-    # As a fallback, we'll just find the max length in the dataset
-    # This is less ideal than a true game-defined max.
-    all_lengths = []
-    for demonstration_name in all_demo_names:
-        actions_path = base_dir_path / demonstration_name / f'actions_{config.environment.action_type}.bag'
-        all_lengths.append(len(bagz.BagReader(actions_path.as_posix())))
-    MAX_GAME_STEPS = max(all_lengths) if all_lengths else 100
-    logging.warning(f"No max steps for {config.environment.name}, defaulting to {MAX_GAME_STEPS}")
+  all_lengths = []
+  for demonstration_name in all_demo_names:
+      actions_path = base_dir_path / demonstration_name / f'actions_{config.environment.action_type}.bag'
+      if actions_path.exists() and actions_path.stat().st_size > 0:
+          try:
+              all_lengths.append(len(bagz.BagReader(actions_path.as_posix())))
+          except Exception as e:
+              logging.warning(f"Could not read demo {demonstration_name}: {e}")
 
+  if not all_lengths:
+      logging.warning("No valid demos found to determine max length. Defaulting to 100.")
+      MAX_GAME_STEPS = 100
+  else:
+      MAX_GAME_STEPS = max(all_lengths)
+
+  logging.info(f"Determined MAX_GAME_STEPS for curriculum to be {MAX_GAME_STEPS}")
   
   categorized_demos = {"opening": [], "mid": [], "end": []}
   
@@ -121,14 +125,25 @@ def _load_demonstrations_and_opening_path(
     observations_path = demo_dir_path / f'observations_{config.environment.observation_type}.bag'
     actions_path = demo_dir_path / f'actions_{config.environment.action_type}.bag'
     
-    observations = list(map(observation_decode_fn, bagz.BagReader(observations_path.as_posix())))
-    actions = list(map(action_decode_fn, bagz.BagReader(actions_path.as_posix())))
-    
+    if not observations_path.exists() or not actions_path.exists():
+        logging.warning(f"Skipping demo {demonstration_name}: missing files.")
+        continue
+
+    try:
+        observations = list(map(observation_decode_fn, bagz.BagReader(observations_path.as_posix())))
+        actions = list(map(action_decode_fn, bagz.BagReader(actions_path.as_posix())))
+    except Exception as e:
+        logging.warning(f"Skipping malformed demo {demonstration_name}: {e}")
+        continue
+        
     if not observations or not actions or len(observations) != len(actions):
-        logging.warning(f"Skipping malformed demo: {demonstration_name}")
+        logging.warning(f"Skipping demo {demonstration_name}: obs/action mismatch.")
         continue
         
     demo_length = len(actions)
+    if demo_length == 0:
+        continue
+        
     phase = _get_game_phase(demo_length, MAX_GAME_STEPS)
     categorized_demos[phase].append((observations, actions))
 
@@ -149,21 +164,25 @@ def _load_demonstrations_and_opening_path(
   # This ensures a good spread even for very small N
   sample_order = ["opening", "end", "mid"]
   
+  # This logic handles running out of demos in a category
+  bucket_indices = {phase: 0 for phase in sample_order}
   while len(selected_demos) < num_to_sample:
     something_added = False
     for phase in sample_order:
-      if categorized_demos[phase]:
-        selected_demos.append(categorized_demos[phase].pop())
+      if bucket_indices[phase] < len(categorized_demos[phase]):
+        selected_demos.append(categorized_demos[phase][bucket_indices[phase]])
+        bucket_indices[phase] += 1
         something_added = True
         if len(selected_demos) == num_to_sample:
           break
-    if not something_added or len(selected_demos) == num_to_sample:
+    if not something_added:
       # Stop if we've hit our target or if all lists are empty
+      logging.warning("Ran out of demos to sample from.")
       break
 
   logging.info(f"Selected {len(selected_demos)} demos via stratified sampling.")
 
-  # Split back into two lists ---
+  # Split back into two lists
   demo_observations = [demo[0] for demo in selected_demos]
   demo_actions = [demo[1] for demo in selected_demos]
 
@@ -225,8 +244,6 @@ def _load_demonstrations_and_opening_path(
 
   # return demo_observations, demo_actions, base_dir_path / opening_name
 
-MAX_GAME_STEPS = 9 # For Tic-Tac-Toe
-
 def _create_demonstration_prompt(
     config: config_lib.Experiment,
     demo_observations: list[list[Any]],
@@ -238,12 +255,15 @@ def _create_demonstration_prompt(
 
   # MODIFICATION: Sort and Label
   
-  # Determine MAX_GAME_STEPS again for labeling
-  if config.environment.name == 'tic_tac_toe':
-    MAX_GAME_STEPS = 9
+  # 1. Determine MAX_GAME_STEPS again for labeling
+  if demo_observations:
+      MAX_GAME_STEPS = max(len(o) for o in demo_observations)
   else:
-    # Find max length *in the sample* as a fallback
-    MAX_GAME_STEPS = max(len(o) for o in demo_observations) if demo_observations else 100
+      MAX_GAME_STEPS = 100 # Default for zero-shot
+  
+  # This check is needed because _load_demonstrations... might return 0
+  if MAX_GAME_STEPS == 0:
+      MAX_GAME_STEPS = 100 
 
   # 2. Combine, SORT, and iterate to build prompt
   
@@ -257,14 +277,15 @@ def _create_demonstration_prompt(
   for demo_idx, (observations, actions) in enumerate(demos):
     
     demo_length = len(observations)
+    if demo_length == 0: continue
     
     # Get the label
-    phase = _get_game_phase(demo_length, MAX_GAME_STEPS)
+    phase_label = prompts.get_game_phase_label(demo_length, MAX_GAME_STEPS)
     
     # Add the label only when the phase changes
-    if phase != current_phase:
-        current_phase = phase
-        demo_prompts.append(f"\n--- {current_phase.upper()}-GAME DEMOS ---\n\n")
+    if phase_label != current_phase:
+        current_phase = phase_label
+        demo_prompts.append(f"\n--- {current_phase}-GAME DEMOS ---\n\n")
 
     # Format the demo as before
     for step_idx, (observation, action) in enumerate(
