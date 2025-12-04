@@ -26,6 +26,7 @@ from lm_act.src.agents import tic_tac_toe as tic_tac_toe_agents
 from lm_act.src.agents import gpt4o_agent as gpt4o_agent
 from lm_act.src.agents import o1mini_agent as o1mini_agent
 from lm_act.src.agents import llama_agent as llama_agent
+from lm_act.src.agents import gemma_agent as gemma_agent
 from lm_act.src.environments import chess as chess_env
 from lm_act.src.environments import crossword as crossword_env
 from lm_act.src.environments import dm_control as dm_control_env
@@ -69,6 +70,8 @@ def get_agent_builder(agent_name: str) -> type[Agent]:
       return o1mini_agent.o1MiniAgent # Added agent
     case 'llama_agent':
       return llama_agent.LLamaAgent # Added agent
+    case 'gemma_agent':
+      return gemma_agent.GemmaAgent # Added agent
     case _:
       raise ValueError(f'Unknown agent name: {agent_name}.')
 

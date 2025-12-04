@@ -37,6 +37,7 @@ from lm_act.src.agents import tic_tac_toe as tic_tac_toe_agent
 from lm_act.src.agents import gpt4o_agent as gpt4o_agent
 from lm_act.src.agents import o1mini_agent as o1mini_agent
 from lm_act.src.agents import llama_agent as llama_agent
+from lm_act.src.agents import gemma_agent as gemma_agent
 from lm_act.src.environments import chess
 from lm_act.src.environments import crossword
 from lm_act.src.environments import dm_control
@@ -79,7 +80,8 @@ _AGENT = flags.DEFINE_enum(
         'tic_tac_toe_minimax',
         'gpt4o_agent',
         'o1mini_agent',
-        'llama_agent'
+        'llama_agent',
+        'gemma_agent'
     ],
     help='The agent to evaluate.',
 )
@@ -131,7 +133,8 @@ _CONFIG_BY_AGENT = immutabledict.immutabledict({
     'tic_tac_toe_minimax': tic_tac_toe_agent.MinimaxAgentConfig,
     'gpt4o_agent': gpt4o_agent.GPT4oAgentConfig, # Added agent
     'o1mini_agent': o1mini_agent.o1MiniAgentConfig, # Added agent
-    'llama_agent': llama_agent.LLamaAgentConfig # Added agent
+    'llama_agent': llama_agent.LLamaAgentConfig, # Added agent
+    'gemma_agent': gemma_agent.GemmaAgentConfig # Added agent
 })
 
 
