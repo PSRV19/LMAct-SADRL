@@ -119,68 +119,98 @@ def _load_demonstrations_and_opening_path(
 
   return demo_observations, demo_actions, base_dir_path / opening_name
 
-def _generate_heuristic(  # NEW FUNCTION
+def _create_demonstration_prompt(
     config: config_lib.Experiment,
     demo_observations: list[list[Any]],
     demo_actions: list[list[Any]],
-    agent_for_heuristics: interfaces.Agent,
-    rng: np.random.Generator,
-) -> str:
-  """Generates a policy heuristic from raw demonstration trajectories."""
-  if config.num_demonstrations == 0:
-    return ""  # No heuristic for zero-shot
-
-  # Format all trajectories into strings
-  formatted_trajectories = []
-  all_content_by_tag = {}
-  for demo_idx, (observations, actions) in enumerate(
-      zip(demo_observations, demo_actions)
-  ):
-    # Use the new helper function from prompts.py
-    formatted_traj_str, content_by_tag = prompts._format_raw_trajectory(
-        config=config,
-        observations=observations,
-        actions=actions,
-        demo_idx=demo_idx,
-    )
-    formatted_trajectories.append(formatted_traj_str)
-    all_content_by_tag.update(content_by_tag)
-
-  # Build the heuristic prompt
-  heuristic_prompt = prompts.build_heuristic_prompt(
-      game_name=config.environment.name,
-      formatted_trajectories=formatted_trajectories,
-  )
-
-  # Call the LLM to generate the heuristic
-  logging.info('Generating heuristic...')
-  heuristic = agent_for_heuristics.step(
-      observation={
-          'prompt': heuristic_prompt,
-          'prompt_data': all_content_by_tag, # Pass image data if any
-      },
-      environment=None,
-      rng=rng,
-  )
-  logging.info(f'Generated heuristic: {heuristic}')
-  return heuristic
-
-def _create_demonstration_prompt(
-    config: config_lib.Experiment,
-    heuristic: str # MODIFICATION: Takes heuristic instead of raw demonstration trajectories
+    previous_episode_summary: dict | None = None,
 ) -> tuple[str, dict[str, Any]]:
   """Returns the demonstration prompt and content for the given config."""
   # Not needed because heuristic is text but we leave it and return an empty dict() for compatibility 
   content_by_tag = dict()
   demo_prompts = list()
 
+  # --- MODIFICATION: Added previous episode summary ---
+  previous_summary_text = ""
+  if previous_episode_summary:
+      previous_summary_text += "--- Summary of Previous Episode ---\n"
+      prev_score = previous_episode_summary['final_score']
+      previous_summary_text += f"Final Score: {prev_score}\n"
+      
+      prev_obs = previous_episode_summary['observations']
+      prev_act = previous_episode_summary['actions']
+      prev_rew = previous_episode_summary['rewards']
+      
+      num_prev_steps = len(prev_obs) # Total number of observations (steps + initial state)
+
+      # Ensure there are enough steps to have distinct first, middle, last
+      if num_prev_steps > 1:
+          # First step
+          first_obs = prev_obs[0]
+          first_act = prev_act[1] if num_prev_steps > 1 else None
+          first_rew = prev_rew[1] if num_prev_steps > 1 else None
+          previous_summary_text += (
+              f"Initial Step: Obs: {first_obs}, Act: {first_act}, Rew: {first_rew}\n"
+          )
+
+          # Middle step
+          middle_idx = num_prev_steps // 2
+          if middle_idx > 0 and middle_idx < num_prev_steps: # Ensure middle_idx is valid
+              middle_obs = prev_obs[middle_idx]
+              # Action and Reward indices are middle_idx + 1 if they exist
+              middle_act = prev_act[middle_idx + 1] if middle_idx + 1 < len(prev_act) else None
+              middle_rew = prev_rew[middle_idx + 1] if middle_idx + 1 < len(prev_rew) else None
+              previous_summary_text += (
+                  f"Middle Step (approx. step {middle_idx}): Obs: {middle_obs}, Act: {middle_act}, Rew: {middle_rew}\n"
+              )
+
+          # Last step
+          last_obs = prev_obs[-1]
+          last_act = prev_act[-1] # Last action taken
+          last_rew = prev_rew[-1] # Last reward received
+          previous_summary_text += (
+              f"Final Step: Obs: {last_obs}, Act: {last_act}, Rew: {last_rew}\n"
+          )
+              
+      previous_summary_text += "--- End Previous Summary ---\n\n"
+  # --- END MODIFICATION ---
+
+  for demo_idx, (observations, actions) in enumerate(
+      zip(demo_observations, demo_actions)
+  ):
+    for step_idx, (observation, action) in enumerate(
+        zip(observations, actions)
+    ):
+      match config.environment.observation_type:
+        case 'fen' | 'coords':
+          demo_prompt = f'Observation: {observation} '
+        case 'dict':
+          demo_prompt = f'Observation: {observation}\n'
+        case 'pgn' | 'txt':
+          demo_prompt = f'Observation:\n{observation}\n'
+        case 'rgb' | 'png':
+          tag = f'<IMG_{demo_idx}_{step_idx}>'
+          content_by_tag[tag] = observation
+          demo_prompt = f'Observation: {tag} '
+        case _:
+          raise ValueError(
+              'Unsupported observation type:'
+              f' {config.environment.observation_type}'
+          )
+
+      demo_prompt += f'Action: {action}' 
+      demo_prompts.append(demo_prompt.strip())
+      demo_prompts.append('\n')
+    demo_prompts.append('\n')
+
   demonstration_prompt = prompts.build_demonstration_prompt(
-      heuristic=heuristic
+      demonstrations=''.join(demo_prompts)
   )
 
-  logging.info('Final demonstration prompt with heuristic: %s', demonstration_prompt)
+  final_prompt_string = previous_summary_text + demonstration_prompt
+  logging.info('Final demonstration prompt with previous summary: %s', final_prompt_string)
 
-  return demonstration_prompt, content_by_tag
+  return final_prompt_string, content_by_tag
 
 
 def _create_trajectory_prompt(
@@ -214,14 +244,14 @@ def _create_trajectory_prompt(
   
     if step_idx > 0:
       prev_action = actions[step_idx] # Action taken after obs_{step_idx-1}
-      # current_reward = rewards[step_idx] # Reward received at obs_{step_idx}
+      current_reward = rewards[step_idx] # Reward received at obs_{step_idx}
 
       if config.prompt.include_past_actions and prev_action is not None:
           step_prompt += f'Action: {prev_action} '
 
       # Do not use the reward anymore in the prompt. 
-      # if current_reward is not None:
-      #     step_prompt += f'Reward: {current_reward}' 
+      if current_reward is not None:
+          step_prompt += f'Reward: {current_reward}' 
 
     trajectory_prompts.append(step_prompt)
     trajectory_prompts.append('\n')
@@ -302,7 +332,8 @@ def evaluate_episode_replay(
 def evaluate_episode(
     episode_idx: int,
     config: config_lib.Experiment,
-) -> tuple[float, int, int, int, int, str]:
+    previous_episode_summary: dict | None = None,
+) -> tuple[float, int, int, int, int, str, str]:
   """Evaluates a single episode."""
 
   # Every episode has to initialize the RNG with a different seed.
@@ -320,29 +351,13 @@ def evaluate_episode(
       'Evaluating episode %d with opening %s.', episode_idx, opening_path
   )
 
-  # MODIFICATION: Heuristic generation step
-  heuristic = ""
-  if config.num_demonstrations > 0:
-    logging.info('Setting up heuristic-generating agent (gpt-4o).')
-    heuristic_agent_config = gpt4o_agent.GPT4oAgentConfig(
-        model_name='gpt-4o'
-    )
-    heuristic_agent = gpt4o_agent.GPT4oAgent(config=heuristic_agent_config)
-
-    # Call the new function
-    heuristic = _generate_heuristic(
-        config=config,
-        demo_observations=demo_observations,
-        demo_actions=demo_actions,
-        agent_for_heuristics=heuristic_agent,
-        rng=rng,
-    )
-
   logging.info('Creating the demonstration chunks.')
   demonstration_prompt, demonstration_prompt_data = (
       _create_demonstration_prompt(
           config=config,
-          heuristic=heuristic
+          demo_observations=demo_observations,
+          demo_actions=demo_actions,
+          previous_episode_summary=previous_episode_summary,
       )
   )
 
@@ -432,12 +447,12 @@ def evaluate_episode(
   score = sum(rewards[1:])  # Skip the first reward since it is always None.
   num_steps = len(rewards) - 1
 
-  # current_episode_data = {
-  #     'observations': observations,
-  #     'actions': actions,
-  #     'rewards': rewards,
-  #     'final_score': score
-  # }
+  current_episode_data = {
+      'observations': observations,
+      'actions': actions,
+      'rewards': rewards,
+      'final_score': score
+  }
 
   return (
       score,
@@ -445,6 +460,6 @@ def evaluate_episode(
       num_invalid_actions,
       num_illegal_actions,
       num_empty_actions,
-      # current_episode_data,
+      current_episode_data,
       demonstration_prompt
   )

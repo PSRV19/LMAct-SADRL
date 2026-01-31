@@ -161,7 +161,7 @@ def main(argv: Sequence[str]) -> None:
     name=run_name
   )
 
-#   previous_episode_data = None
+  previous_episode_data = None
 
   print(f'Environment: {experiment_config.environment.name}')
   print(f'Observation type: {experiment_config.environment.observation_type}')
@@ -169,7 +169,7 @@ def main(argv: Sequence[str]) -> None:
   print(f'Num evaluation episodes: {_NUM_EVALUTION_EPISODES.value}')
 
   scores = list()
-#   all_scores = list() # For current episode data
+  all_scores = list() # For current episode data
   num_steps = list()
   num_invalid_actions = list()
   num_illegal_actions = list()
@@ -182,6 +182,7 @@ def main(argv: Sequence[str]) -> None:
         episode_num_invalid_actions,
         episode_num_illegal_actions,
         episode_num_empty_actions,
+        current_episode_data,
         demonstration_prompt
     ) = evaluate.evaluate_episode(
         episode_idx=episode,
@@ -189,8 +190,8 @@ def main(argv: Sequence[str]) -> None:
     )
 
     scores.append(episode_score)
-    # all_scores.append(current_episode_data)
-    # previous_episode_data = current_episode_data
+    all_scores.append(current_episode_data)
+    previous_episode_data = current_episode_data
     num_steps.append(episode_num_steps)
     num_invalid_actions.append(episode_num_invalid_actions)
     num_illegal_actions.append(episode_num_illegal_actions)
